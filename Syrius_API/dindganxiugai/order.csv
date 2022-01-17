@@ -1,0 +1,19 @@
+Order ID (M),Batch ID (O),Business type (M),Business process (M),Priority (M),Container type (M),Item name (M),Item code(M),Item image link (O),Item count (M),Bin location (M),Sequential execution (O)
+1231231231244,1,Picking,Sorting after picking,1,3A_container,雷龙-小白龙,15SV2o081gL562A97476,file:///../sdcard/syrius_guanxi_productImg/6911986345668.png,3,A05010103,No
+1231231231245,1,Picking,Sorting after picking,1,3A_container,格子短袖+特殊字符!@#$%^^&**^%$@##,3kxT84Pp6151492732q9,file:///../sdcard/syrius_guanxi_productImg/4942355137139.png,6,A02010102,No
+1231231231246,1,Picking,Sorting after picking,1,3A_container,数据线 5V 1A,84c3rl69P9621C8F1057,file:///../sdcard/syrius_guanxi_productImg/4903301519393.png,28,A01010101,No
+1231231231247,1,Picking,Sorting after picking,1,3A_container,数据线 5V 1A,304s1478S1l823wo696E,file:///../sdcard/syrius_guanxi_productImg/4923743543567.jpg,5,A06010102,No
+1231231231248,1,Picking,Sorting after picking,1,3A_container,数据线 5V 1A,70E410d62f2bI5p36998,file:///../sdcard/syrius_guanxi_productImg/4549395350520.png,17,A02010101,No
+1231231231249,1,Picking,Sorting after picking,1,3A_container,数据线 5V 1A,680f3605Q95P14p2W8B7,file:///../sdcard/syrius_guanxi_productImg/4922848674385.jpg,20,A05010103,No
+1231231231250,1,Picking,Sorting after picking,1,3A_container,这个只是一个测试数据,3CNj48ms176065029W39,file:///../sdcard/syrius_guanxi_productImg/4923743543567.jpg,3,A06010101,No
+1231231231251,1,Picking,Sorting after picking,1,3A_container,益达无糖口香糖 205g,59383r17269A44y1d8uh,file:///../sdcard/syrius_guanxi_productImg/4571157254333.jpg,29,A04010101,No
+1231231231252,1,Picking,Sorting after picking,1,3A_container,哇咔咔 矿泉水 980ml,056k79B35E17RL818z64,file:///../sdcard/syrius_guanxi_productImg/4909384486567.png,27,A06010102,No
+1231231231253,1,Picking,Sorting after picking,1,3A_container,数据线 5V 1A,41A89c319P535e007r4Y,file:///../sdcard/syrius_guanxi_productImg/4901330573492.jpg,5,A03010101,No
+1231231231254,1,Picking,Sorting after picking,1,3A_container,雷龙-小白龙,X5198B76J564201no3z3,file:///../sdcard/syrius_guanxi_productImg/4923743892375.jpg,14,A03010102,No
+1231231231255,1,Picking,Sorting after picking,1,3A_container,数据线 5V 1A,72csA1q3029557084y1O,file:///../sdcard/syrius_guanxi_productImg/4549395350520.png,12,A01010101,No
+1231231231256,1,Picking,Sorting after picking,1,3A_container,雷龙-小白龙,s72061Ge3q96437gp845,file:///../sdcard/syrius_guanxi_productImg/4922848674385.jpg,10,A01010102,No
+1231231231257,1,Picking,Sorting after picking,1,3A_container,雷龙-小白龙,513gr6kt2920X6778b19,file:///../sdcard/syrius_guanxi_productImg/4571157254333.jpg,22,A02010103,No
+1231231231258,1,Picking,Sorting after picking,1,3A_container,哇咔咔 矿泉水 980ml,24W537458s99Xm076Z2T,file:///../sdcard/syrius_guanxi_productImg/6911986345668.png,1,A05010103,No
+1231231231259,1,Picking,Sorting after picking,1,3A_container,哇咔咔 矿泉水 980ml,J75h4978A066N3R8u341,file:///../sdcard/syrius_guanxi_productImg/4923743543567.jpg,19,A05010101,No
+1231231231260,1,Picking,Sorting after picking,1,3A_container,注意检查页面文本,X9687y4r275206J51N3F,file:///../sdcard/syrius_guanxi_productImg/4942355137139.png,13,A03010101,No
+1231231231261,1,Picking,Sorting after picking,1,3A_container,不允许有逗号,fd356m4i22106734G81L,file:///../sdcard/syrius_guanxi_productImg/4923743543567.jpg,22,A04010101,No
