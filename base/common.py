@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 # Author: luoxiaobo
 # TIME: 2020/11/30 12:00
-
-
+import random
+import string
 import time, csv
 import traceback
 import sys, os, wcwidth
@@ -211,6 +211,18 @@ def reset_keyboard(device):
     except:
         logger.debug(f"恢复设备{device}的输入法失败.")
 
+def mychar():
+    special = '~!@#$%^&*( )-_/?.,>[]==+'
+    alph = string.ascii_letters
+    num = '0123456789'
+    jap = 'おはようございますこんにちははじめまして、どうぞお愿（ねが）いいたします'
+    kor = '생일 축하합니다새해복 많이받세요감사합니다 ! 고맙습니다그래요? 그렇습니까?'
+    ch = '的一是在不了有和人这中大为上个国我以要他时来用们生到作地于出就分对成会可主发年动同工也能下过子说产种面而方后多定行学法所民'
+    ls = special+alph+num+jap+kor+ch
+    chr_text = random.sample(ls,random.randint(1,30))
+    return ''.join(chr_text)
+
+
 
 class just_err(Exception):
 
@@ -219,4 +231,4 @@ class just_err(Exception):
 
 
 if __name__ == '__main__':
-    print(file_time())
+    print(mychar())

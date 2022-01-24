@@ -25,7 +25,6 @@ class GGR():
             'automationName': 'UiAutomator2'  # 可能是这里导致的常断开
         }
         br = webdriver.Remote(f"http://localhost:{port}/wd/hub", app_data)
-        br.implicitly_wait(5)  # 有必要等一下,有些时候拿个把view就结束了.牺牲一些效率,提一下稳定性.
         driver = TestKey(br)
         return driver
 

@@ -84,7 +84,7 @@ class TestKey:
                 raise myerror
 
     # 定位单个元素.
-    def find_element(self, locator, wait=5, i=False, raise_except=False):
+    def find_element(self, locator, wait=2, i=False, raise_except=False):
         # print(locator)  # 格式是符合要求的,正确了.
         try:
             element = wdw(self.driver, wait, 0.1).until(EC.presence_of_element_located(locator))
@@ -97,7 +97,7 @@ class TestKey:
                 raise myerror  # 依据情况来报错。
 
     # 批量定位元素
-    def find_elements(self, locator, wait=10, i=False, raise_except=False):
+    def find_elements(self, locator, wait=2, i=False, raise_except=False):
         try:
             element = wdw(self.driver, wait, 0.1).until(EC.presence_of_all_elements_located(locator))
             if i:
@@ -109,7 +109,7 @@ class TestKey:
                 raise myerror  # 做一个返回.增加错误判断.
 
     # 定位并点击元素
-    def click_element(self, locator, wait=5, i=False, raise_except=False):
+    def click_element(self, locator, wait=1, i=False, raise_except=False):
         try:
             element = self.find_element(locator, wait=wait)
             element.click()
@@ -120,7 +120,7 @@ class TestKey:
                 raise myerror  # 做一个返回.增加错误判断.
 
     # 双击元素
-    def double_click(self, locator, wait=5, i=False, raise_except=False):
+    def double_click(self, locator, wait=1, i=False, raise_except=False):
         try:
             element = self.find_element(locator, wait=wait)
             AC(self.driver).double_click(element).perform()
@@ -147,7 +147,7 @@ class TestKey:
             # raise myerror
 
     # 选择下拉框元素
-    def select_value(self, locator, wait=5, value=None):
+    def select_value(self, locator, wait=1, value=None):
         element = self.find_element(locator, wait)
         if isinstance(value, int):
             select.Select(element).select_by_index(value)
@@ -159,7 +159,7 @@ class TestKey:
             logger.error("下拉框选择失败.请检查输入是否正确.")
 
     # 判断元素是否可见,配合断言使用的.返回0 or 1,直接判断.
-    def element_display(self, locator, wait=5, i=False, raise_except=False):
+    def element_display(self, locator, wait=2, i=False, raise_except=False):
         try:
             element = wdw(self.driver, wait, 0.5).until(EC.presence_of_element_located(locator))
             if i:
@@ -170,7 +170,7 @@ class TestKey:
                 raise myerror  # 做一个返回.增加错误判断.
 
     # 判断组件数量,主要是APP端使用.配合断言使用.
-    def element_num(self, locator, num=1, wait=5, i=True):
+    def element_num(self, locator, num=1, wait=2, i=True):
         try:
             elements = self.find_elements(locator, wait)
             if len(elements) >= num:
@@ -184,7 +184,7 @@ class TestKey:
             raise myerror  # 这里不知道会不会出问题,find_elements内自带一个except.失败了不知道到得了这里不.
 
     # 判断组件是否存在,且文本值符合要求.
-    def is_element_text(self, locator, text="", wait=5, i=True):
+    def is_element_text(self, locator, text="", wait=2, i=True):
         try:
             count = 0
             while count < wait:
@@ -212,7 +212,7 @@ class TestKey:
             print(traceback.format_exc())
 
     # 输入文本
-    def input_text(self, locator, text, wait=5):
+    def input_text(self, locator, text, wait=2):
         element = self.find_element(locator, wait)
         try:
             element.clear()  # 先进行清空.避免干扰影响
@@ -222,7 +222,7 @@ class TestKey:
             element.send_keys(text)
 
     # 获取元素对象的文本
-    def get_element_text(self, locator, wait=5):
+    def get_element_text(self, locator, wait=2):
         element = self.find_element(locator, wait)
         return element.text
 
@@ -373,25 +373,28 @@ class TestKey:
         sleep(0.5)  # 点完做一下等待,APP自动化性能太差.
 
     # 获取元素对象的文本
-    def app_elements_text(self, locator, wait=10, i=False, d=False, raise_except=False):
+    def app_elements_text(self, locator, wait=2, i=False, d=False, raise_except=False):
         # time.sleep(1)  # 有时候会拿不到,那些APP就记得开这个等待时间.很坑.
         elements = self.find_elements(locator, wait)
         if i:
             logger.debug("获取App组件批量文本信息.")
         text = []
-        for ele in elements:
-            try:
-                if ele.text:  # 把空的干掉,空的不需要.
-                    text.append(ele.text)  # 并不是所有的组件都有文本,所以,做个异常跳过.
-            except:
-                pass
-        if d:  # 新增参数,有时候调试需要打印一下抓到的文本信息.
-            logger.debug(text)
-        if raise_except:
-            raise myerror
-        return text
+        if elements:
+            for ele in elements:
+                try:
+                    if ele.text:  # 把空的干掉,空的不需要.
+                        text.append(ele.text)  # 并不是所有的组件都有文本,所以,做个异常跳过.
+                except:
+                    pass
+            if d:  # 新增参数,有时候调试需要打印一下抓到的文本信息.
+                logger.debug(text)
+            if raise_except:
+                raise myerror
+            return text
+        # else:
+        #     return []
 
-    def app_elements_content_desc(self, locator, wait=10, i=False, d=False):
+    def app_elements_content_desc(self, locator, wait=2, i=False, d=False):
         elements = self.find_elements(locator, wait)
         if i:
             logger.debug("获取App组件的Content-desc文本信息.")
@@ -438,7 +441,7 @@ class TestKey:
         self.driver.press_keycode(key)
         if i:
             logger.info(f"成功按下按键:{key}，等待完成。")
-        sleep(0.5)  # 给个响应时间。
+        # sleep(0.5)  # 后面的函数自己有等待时间,不需要这里等了.
 
 
 class myerror(Exception):
