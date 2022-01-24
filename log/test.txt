@@ -8281,3 +8281,163 @@ Syrius 2022-01-24 18:01:52 [INFO] : The randomly selected report type is:其他
 Syrius 2022-01-24 18:01:54 [INFO] : Are you sure you want to report 上报该异常 exception?
 Syrius 2022-01-24 18:01:54 [INFO] : Click OK to report the exception:其他 successfuly.
 Syrius 2022-01-24 18:02:03 [INFO] : The robot is going：异常处理区,please wait。
+Syrius 2022-01-24 18:02:03 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:02:28 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:02:28 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:02:28 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:02:31 [INFO] : Please bind the container.
+Syrius 2022-01-24 18:02:34 [INFO] : Barcode [8121047289016] entered successfully.
+Syrius 2022-01-24 18:02:37 [INFO] : Click text : [完成] successful.
+Syrius 2022-01-24 18:02:39 [INFO] : The robot is currently picking goods:['拣货中', 'A01020204', '请拣取正确货品并扫码', '联想ThinkPad_T490', '2F94smH52y78917631o6', '0', '/', '6', '拣货数量/需拣数量', '异常上报', '输入']
+Syrius 2022-01-24 18:02:39 [INFO] : Case 1, the product code has not been scanned, and the input button is about to be clicked.
+Syrius 2022-01-24 18:02:40 [INFO] : Click text : [输入] successful.
+Syrius 2022-01-24 18:02:40 [INFO] : Barcode [2F94smH52y78917631o6] entered successfully.
+Syrius 2022-01-24 18:02:44 [INFO] : More than 1 product needs to be picked, click the number and enter the maximum value.
+Syrius 2022-01-24 18:02:45 [INFO] : Click goods number，now page text:['拣货中', '联想ThinkPad_T490', '2F94smH52y78917631o6', '1/6', '完成', '异常上报']
+Syrius 2022-01-24 18:02:45 [INFO] : Barcode [6] entered successfully.
+Syrius 2022-01-24 18:02:47 [INFO] : Enter the maximum value [6] successfully.
+Syrius 2022-01-24 18:02:47 [INFO] : Picking of the current item is complete.Check where you can go.
+Syrius 2022-01-24 18:02:55 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:02:55 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:02:55 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:02:58 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:02:58 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:02:58 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:02:58 [INFO] : Please bind the container.
+Syrius 2022-01-24 18:03:01 [INFO] : Barcode [6605433031597] entered successfully.
+Syrius 2022-01-24 18:03:04 [INFO] : Click text : [完成] successful.
+Syrius 2022-01-24 18:03:04 [INFO] : The robot is going：A04010201,please wait。
+Syrius 2022-01-24 18:03:04 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:03:21 [INFO] : The robot is currently picking goods:['拣货中', 'A04010201', '请拣取正确货品并扫码', '拯救者Y9000 I7-12800H 16+512GB', '9728e73dF315816H0oJ0', '0', '/', '15', '拣货数量/需拣数量', '异常上报', '输入']
+Syrius 2022-01-24 18:03:21 [INFO] : Case 1, the product code has not been scanned, and the input button is about to be clicked.
+Syrius 2022-01-24 18:03:23 [INFO] : Click text : [输入] successful.
+Syrius 2022-01-24 18:03:23 [INFO] : Barcode [9728e73dF315816H0oJ0] entered successfully.
+Syrius 2022-01-24 18:03:29 [INFO] : More than 1 product needs to be picked, click the number and enter the maximum value.
+Syrius 2022-01-24 18:03:30 [INFO] : Click goods number，now page text:['拣货中', '拯救者Y9000 I7-12800H 16+512GB', '9728e73dF315816H0oJ0', '1/15', '完成', '异常上报']
+Syrius 2022-01-24 18:03:31 [INFO] : Barcode [15] entered successfully.
+Syrius 2022-01-24 18:03:32 [INFO] : Enter the maximum value [15] successfully.
+Syrius 2022-01-24 18:03:32 [INFO] : Picking of the current item is complete.Check where you can go.
+Syrius 2022-01-24 18:03:34 [INFO] : No items to pick, go to the packing area.
+Syrius 2022-01-24 18:03:34 [INFO] : The robot is going：打包绑定区,please wait。
+Syrius 2022-01-24 18:03:34 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:04:07 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:04:07 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:04:07 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:04:10 [INFO] : Please bind the container.
+Syrius 2022-01-24 18:04:12 [INFO] : Barcode [8680872858990] entered successfully.
+Syrius 2022-01-24 18:04:15 [INFO] : Click text : [完成] successful.
+Syrius 2022-01-24 18:04:16 [INFO] : The robot is going：A02010204,please wait。
+Syrius 2022-01-24 18:04:16 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:04:26 [INFO] : The robot is currently picking goods:['拣货中', 'A02010204', '请拣取正确货品并扫码', '益达无糖口香糖 205g', '637mMn4438fB1269507I', '0', '/', '24', '拣货数量/需拣数量', '异常上报', '输入']
+Syrius 2022-01-24 18:04:26 [INFO] : Case 1, the product code has not been scanned, and the input button is about to be clicked.
+Syrius 2022-01-24 18:04:28 [INFO] : Click text : [输入] successful.
+Syrius 2022-01-24 18:04:28 [INFO] : Barcode [637mMn4438fB1269507I] entered successfully.
+Syrius 2022-01-24 18:04:34 [INFO] : More than 1 product needs to be picked, click the number and enter the maximum value.
+Syrius 2022-01-24 18:04:35 [INFO] : Click goods number，now page text:['拣货中', '益达无糖口香糖 205g', '637mMn4438fB1269507I', '1/24', '完成', '异常上报']
+Syrius 2022-01-24 18:04:36 [INFO] : Barcode [24] entered successfully.
+Syrius 2022-01-24 18:04:37 [INFO] : Enter the maximum value [24] successfully.
+Syrius 2022-01-24 18:04:37 [INFO] : Picking of the current item is complete.Check where you can go.
+Syrius 2022-01-24 18:04:39 [INFO] : No items to pick, go to the packing area.
+Syrius 2022-01-24 18:04:40 [INFO] : The robot is going：打包绑定区,please wait。
+Syrius 2022-01-24 18:04:40 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:05:23 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:05:23 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:05:23 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:05:25 [INFO] : Please bind the container.
+Syrius 2022-01-24 18:05:27 [INFO] : Barcode [3689752612118] entered successfully.
+Syrius 2022-01-24 18:05:30 [INFO] : Click text : [完成] successful.
+Syrius 2022-01-24 18:05:30 [INFO] : The robot is going：A02020203,please wait。
+Syrius 2022-01-24 18:05:30 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:05:40 [INFO] : The robot is currently picking goods:['拣货中', 'A02020203', '请拣取正确货品并扫码', '85oz 爆米花', '9561813Ro24C74HZz205', '0', '/', '7', '拣货数量/需拣数量', '异常上报', '输入']
+Syrius 2022-01-24 18:05:40 [INFO] : Case 1, the product code has not been scanned, and the input button is about to be clicked.
+Syrius 2022-01-24 18:05:41 [INFO] : Click text : [输入] successful.
+Syrius 2022-01-24 18:05:42 [INFO] : Barcode [9561813Ro24C74HZz205] entered successfully.
+Syrius 2022-01-24 18:05:45 [INFO] : More than 1 product needs to be picked, click the number and enter the maximum value.
+Syrius 2022-01-24 18:05:46 [INFO] : Click goods number，now page text:['拣货中', '85oz 爆米花', '9561813Ro24C74HZz205', '1/7', '完成', '异常上报']
+Syrius 2022-01-24 18:05:46 [INFO] : Barcode [7] entered successfully.
+Syrius 2022-01-24 18:05:48 [INFO] : Enter the maximum value [7] successfully.
+Syrius 2022-01-24 18:05:48 [INFO] : Picking of the current item is complete.Check where you can go.
+Syrius 2022-01-24 18:05:50 [INFO] : No items to pick, go to the packing area.
+Syrius 2022-01-24 18:05:50 [INFO] : The robot is going：打包绑定区,please wait。
+Syrius 2022-01-24 18:05:50 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:06:28 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:06:28 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:06:28 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:06:28 [INFO] : Please bind the container.
+Syrius 2022-01-24 18:06:30 [INFO] : Barcode [1235994121245] entered successfully.
+Syrius 2022-01-24 18:06:33 [INFO] : Click text : [完成] successful.
+Syrius 2022-01-24 18:06:34 [INFO] : The robot is going：A06010104,please wait。
+Syrius 2022-01-24 18:06:34 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:06:58 [INFO] : The robot is currently picking goods:['拣货中', 'A06010104', '请拣取正确货品并扫码', '코카콜라 560ml', '2695Ps78732cW31B60h5', '0', '/', '21', '拣货数量/需拣数量', '异常上报', '输入']
+Syrius 2022-01-24 18:06:58 [INFO] : Case 1, the product code has not been scanned, and the input button is about to be clicked.
+Syrius 2022-01-24 18:06:59 [INFO] : Click text : [输入] successful.
+Syrius 2022-01-24 18:06:59 [INFO] : Barcode [2695Ps78732cW31B60h5] entered successfully.
+Syrius 2022-01-24 18:07:03 [INFO] : More than 1 product needs to be picked, click the number and enter the maximum value.
+Syrius 2022-01-24 18:07:04 [INFO] : Click goods number，now page text:['拣货中', '코카콜라 560ml', '2695Ps78732cW31B60h5', '1/21', '完成', '异常上报']
+Syrius 2022-01-24 18:07:04 [INFO] : Barcode [21] entered successfully.
+Syrius 2022-01-24 18:07:06 [INFO] : Enter the maximum value [21] successfully.
+Syrius 2022-01-24 18:07:06 [INFO] : Picking of the current item is complete.Check where you can go.
+Syrius 2022-01-24 18:07:08 [INFO] : No items to pick, go to the packing area.
+Syrius 2022-01-24 18:07:08 [INFO] : The robot is going：打包绑定区,please wait。
+Syrius 2022-01-24 18:07:08 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:07:32 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:07:32 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:07:32 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:07:35 [INFO] : Please bind the container.
+Syrius 2022-01-24 18:07:37 [INFO] : Barcode [8738006194468] entered successfully.
+Syrius 2022-01-24 18:07:40 [INFO] : Click text : [完成] successful.
+Syrius 2022-01-24 18:07:41 [INFO] : The robot is going：A01020203,please wait。
+Syrius 2022-01-24 18:07:41 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:07:50 [INFO] : The robot is currently picking goods:['拣货中', 'A01020203', '请拣取正确货品并扫码', 'いくつかの小さな袋に分かれていて L', '804mt35177P2436og98M', '0', '/', '2', '拣货数量/需拣数量', '异常上报', '输入']
+Syrius 2022-01-24 18:07:50 [INFO] : Case 1, the product code has not been scanned, and the input button is about to be clicked.
+Syrius 2022-01-24 18:07:51 [INFO] : Click text : [输入] successful.
+Syrius 2022-01-24 18:07:52 [INFO] : Barcode [804mt35177P2436og98M] entered successfully.
+Syrius 2022-01-24 18:07:55 [INFO] : More than 1 product needs to be picked, click the number and enter the maximum value.
+Syrius 2022-01-24 18:07:56 [INFO] : Click goods number，now page text:['拣货中', 'いくつかの小さな袋に分かれていて L', '804mt35177P2436og98M', '1/2', '完成', '异常上报']
+Syrius 2022-01-24 18:07:57 [INFO] : Barcode [2] entered successfully.
+Syrius 2022-01-24 18:07:58 [INFO] : Enter the maximum value [2] successfully.
+Syrius 2022-01-24 18:07:58 [INFO] : Picking of the current item is complete.Check where you can go.
+Syrius 2022-01-24 18:08:00 [INFO] : No items to pick, go to the packing area.
+Syrius 2022-01-24 18:08:01 [INFO] : The robot is going：打包绑定区,please wait。
+Syrius 2022-01-24 18:08:01 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:08:43 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:08:43 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:08:43 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:08:44 [INFO] : Please bind the container.
+Syrius 2022-01-24 18:08:46 [INFO] : Barcode [7784844227355] entered successfully.
+Syrius 2022-01-24 18:08:49 [INFO] : Click text : [完成] successful.
+Syrius 2022-01-24 18:08:51 [INFO] : The robot is going：A01020203,please wait。
+Syrius 2022-01-24 18:08:51 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:09:01 [INFO] : The robot is currently picking goods:['拣货中', 'A01020203', '请拣取正确货品并扫码', '数据线 5V 1A', '64994007tOG213Sa183l', '0', '/', '27', '拣货数量/需拣数量', '异常上报', '输入']
+Syrius 2022-01-24 18:09:01 [INFO] : Case 1, the product code has not been scanned, and the input button is about to be clicked.
+Syrius 2022-01-24 18:09:03 [INFO] : Click text : [输入] successful.
+Syrius 2022-01-24 18:09:03 [INFO] : Barcode [64994007tOG213Sa183l] entered successfully.
+Syrius 2022-01-24 18:09:06 [INFO] : More than 1 product needs to be picked, click the number and enter the maximum value.
+Syrius 2022-01-24 18:09:07 [INFO] : Click goods number，now page text:['拣货中', '数据线 5V 1A', '64994007tOG213Sa183l', '1/27', '完成', '异常上报']
+Syrius 2022-01-24 18:09:08 [INFO] : Barcode [27] entered successfully.
+Syrius 2022-01-24 18:09:09 [INFO] : Enter the maximum value [27] successfully.
+Syrius 2022-01-24 18:09:09 [INFO] : Picking of the current item is complete.Check where you can go.
+Syrius 2022-01-24 18:09:11 [INFO] : No items to pick, go to the packing area.
+Syrius 2022-01-24 18:09:12 [INFO] : The robot is going：打包绑定区,please wait。
+Syrius 2022-01-24 18:09:12 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:10:00 [INFO] : Click text : [已取下] successful.
+Syrius 2022-01-24 18:10:00 [INFO] : Finished one task,good job!
+Syrius 2022-01-24 18:10:00 [INFO] : ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+
+Syrius 2022-01-24 18:10:03 [INFO] : Please bind the container.
+Syrius 2022-01-24 18:10:06 [INFO] : Barcode [6802810234871] entered successfully.
+Syrius 2022-01-24 18:10:09 [INFO] : Click text : [完成] successful.
+Syrius 2022-01-24 18:10:09 [INFO] : The robot is going：A07010101,please wait。
+Syrius 2022-01-24 18:10:09 [INFO] : Continuously check whether the text  [前往] is in the current interface.
+Syrius 2022-01-24 18:10:26 [INFO] : The robot is currently picking goods:['拣货中', 'A07010101', '请拣取正确货品并扫码', '喉が渇いた时に 108kg', '4907e4GD907M86Eu1153', '0', '/', '23', '拣货数量/需拣数量', '异常上报', '输入']
+Syrius 2022-01-24 18:10:26 [INFO] : Case 1, the product code has not been scanned, and the input button is about to be clicked.
+Syrius 2022-01-24 18:10:27 [INFO] : Click text : [输入] successful.
+Syrius 2022-01-24 18:10:27 [INFO] : Barcode [4907e4GD907M86Eu1153] entered successfully.
