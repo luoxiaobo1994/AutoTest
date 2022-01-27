@@ -62,7 +62,7 @@ class SpeedPicker:
         desc = self.driver.app_elements_content_desc(self.view)  # if find element faile,will except,restart script
         if 'SkillSpace' not in ''.join(desc):
             logger.warning(
-                "The main interface of the program is no longer currently, and SpeedPicker cannot be clicked")
+                "Currently not in Jrvis Launcher.")
             return
         else:
             image = self.driver.find_elements(self.image)
@@ -72,8 +72,18 @@ class SpeedPicker:
                     x = i.split('\n')[::-1]
                     sp_index = x.index('SpeedPicker') + 1  # 因为反过来了.从0开始.
                     self.driver.click_one(image[-sp_index])
-                    logger.info("Auto click on SpeedPicker.")
-                    # self.wait_moment("version:") 这是部分文本.
+                    logger.info("SpeedPicker not start,Auto click on SpeedPicker.")
+                    sleep(2)
+                    tmp_text = self.get_text()
+                    for item in tmp_text:
+                        if 'version:' in item:
+                            logger.info(f"SpeedPicker Version:{item.split(':')[-1]}")
+                            self.wait_moment(item, i=False, without="退出")
+                            new_text = self.get_text()
+                            if item in new_text and '退出' in new_text:
+                                logger.warning(f"SpeedPicker can't start.Please check error.{new_text}")
+                                exit(-404)
+                    # self.wait_moment("version:") 这是部分文本.  # 'version:1.5.730'
                     break
             else:
                 logger.warning(
@@ -82,14 +92,13 @@ class SpeedPicker:
     def err_notify(self):
         try:
             notify = self.driver.app_elements_content_desc(self.image, wait=1)  # 不用抓太久.
-
             if notify:
                 for i in notify:
                     # The number of notifications in the upper right corner is also the image class So do a screening
-                    if len(i) > 3:
+                    if len(i) > 3 and '机器人' in i:
                         logger.info(
                             f"This robot [{i}] has some exceptions, please fix them first.")
-                    return 1
+                        return 1
             else:
                 return 0  # Jump out of the loop and do nothing
         except:
@@ -268,7 +277,7 @@ class SpeedPicker:
         else:
             logger.info('No cargo box is full')
 
-    def wait_moment(self, text, timeout=1):
+    def wait_moment(self, text, timeout=1, i=True, without=None):
         # 持续去抓某个文本，直到这个文本不再这个页面了。说明流程变了。
         # 这里可能是影响效率的地方，想办法怎么优化一下。
         logger.info(f"Continuously check whether the text  [{text}] is in the current interface.")
@@ -280,7 +289,13 @@ class SpeedPicker:
                 if view_ls:  # 居然还有空的情况，干。
                     if text in view_ls:
                         if self.random_trigger(n=60):
-                            logger.debug(f"Still check:{text},just debug log .....")
+                            if i:
+                                logger.debug(f"Still check:{text},just debug log .....")
+                        elif without:
+                            # if without text display,break loop
+                            if self.driver.element_display((By.XPATH, f'//*[@text="{without}"]')):
+                                logger.debug(f"Check without text {without} display. Stop check {text}.")
+                                break
                         sleep(1)  # 等待时间不能太长。
                         count += timeout  # 持续计时,看看卡界面多久了.
                         minutes = count // 60
@@ -289,6 +304,7 @@ class SpeedPicker:
                                 f"The page has not changed for more than {minutes} minutes, please go to check the robot.")
                             self.err_notify()
                             break  # 出问题了，也跳出流程，等着回来吧。
+
                     else:
                         break  # 抓不到重复的文本了。跳出循环。
                 else:
@@ -590,6 +606,7 @@ class SpeedPicker:
 
     def main(self):
         """主业务流程，通过不断的抓取页面信息。去确定当前SpeedPicker运行状态"""
+        self.open_sp()
         while True:
             self.press_ok()  # 应对随时弹出来的需要协助，提示框。
             try:
@@ -604,6 +621,7 @@ class SpeedPicker:
             elif len(use_text & set(view_ls)) == 0:
                 logger.warning(
                     f"Interface get need text fail，please check is exit SpeedPicker。\nNow Get text list:{view_ls}")
+                sleep(5)
                 if ['紧急停止', '若需恢复工作', '请解除急停状态'] in view_ls:
                     break
                 elif self.random_trigger(3):  # 有时候只是卡一下界面,并不需要一直检查是不是发生了异常.
