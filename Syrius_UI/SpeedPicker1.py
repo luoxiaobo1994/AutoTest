@@ -8,7 +8,7 @@ import threading
 from time import sleep
 from selenium.webdriver.common.by import By
 from GGR import GGR
-from Shein_devices import devices
+from devices_pad import devices
 from base.common import *
 from utils.log import logger
 
@@ -254,6 +254,7 @@ class SpeedPicker:
             while count > 0:
                 try:
                     self.click_view_text('完成', wait=3)
+                    break
                 except:
                     count -= 1
 
@@ -495,7 +496,7 @@ class SpeedPicker:
         self.click_input()
         while True:
             self.press_ok()
-            if "绑定载物箱" in self.get_text():
+            if "绑定载物箱" in ''.join(self.get_text()):
                 self.inputcode(code=str(random.randint(1, 9999999999999)))
                 sleep(1)  # 绑定单个的时候,抓太快了,会重复输一下,此时页面换了,就没有输入框了.给个延时.
                 try:
@@ -616,7 +617,7 @@ class SpeedPicker:
                 if self.random_trigger(n=30):  # 触发随机。
                     self.pause_move()  # 暂停移动。
                 self.wait_moment("前往")
-            elif '请扫描载物箱码或任意格口码' in ls or "绑定载物箱" in view_ls:
+            elif '请扫描载物箱码或任意格口码' in ls or "绑定载物箱" in ls:
                 self.bind_carrier()
             elif len({'拣货中', '请拣取正确货品并扫码', '完成', '异常上报', '拣货数量/需拣数量', '载物箱已满?', '拣货数量'} & set(view_ls)) > 2:
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
@@ -627,12 +628,13 @@ class SpeedPicker:
                 self.click_view_text("已取下")  # 强点.
                 logger.info("Finished one task,good job!")
                 logger.info('~*' * 25 + '\n')
+                self.wait_moment('已取下')
             elif '拣货异常' in ls:  # 异常处理区.
                 logger.info("Robot in Error area，error goods list：")
                 err_info = self.get_text()
                 for item in err_info:
                     if item != '':
-                        logger(f"Error goods list:{item}")
+                        logger.info(f"Error goods list:{item}")
             elif view_ls[0] == "异常上报":  # 异常上报界面.
                 logger.info("Now in the report error interface。")
                 self.do_err()
@@ -658,7 +660,7 @@ if __name__ == '__main__':
             logger.error(
                 f"Other except raising,{timeout}s will restart script，Except device："
                 f"{SpeedPicker().device_num()[0]},{SpeedPicker().device_num()[1]}:"
-                f"\n1.Check Appium server.\n2.Check port.\n3.Check device udid.")
+                f"\n1.Check Appium server.\n2.Check appium port.\n3.Check device udid(Pad IP).\n4.Check your devices is online")
             logger.warning(f"Raising except is:{e}")
             logger.info(f"Error line:{traceback.format_exc()}")
             sleep(timeout)

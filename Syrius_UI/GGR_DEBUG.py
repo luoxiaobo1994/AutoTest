@@ -7,7 +7,7 @@ import re
 from time import sleep
 from selenium.webdriver.common.by import By
 from GGR import GGR
-from Shein_devices import devices
+from devices_pad import devices
 from base.common import *
 from utils.log import logger
 from multiprocessing.dummy import Pool

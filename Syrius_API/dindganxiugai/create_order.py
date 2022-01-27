@@ -92,6 +92,7 @@ class create_order():
 
     def item_name(self):
         # 商品名称,随机选一个.这样处理不太好,测试数据,就无所谓了.
+        # 如果从文件里读,则还要附带一个文件,测试数据需求不大,代码写死即可.
         goods_ls = ['炬星文化衫 黑色 XXL $189', '格子短袖+特殊字符!@#$%^^&**^%$@##', '益达无糖口香糖 205g',
                     '雷龙-小白龙', '不允许有英文逗号', '注意检查页面文本', '哇咔咔 矿泉水 980ml', '这个只是一个测试数据',
                     '85oz 爆米花', '大瓶可乐 35ml', '百岁山 矿泉水', '联想ThinkPad_T490', '拯救者Y9000 I7-12800H 16+512GB',
@@ -105,7 +106,7 @@ class create_order():
 
     def item_code(self, num=20):
         # 商品条码生成.现在是字母数字随机组合,1/3字母,2/3数字.
-        code = '199103181516'  # 先保留,异常情况,就返回万能码.
+        # code = '199103181516'  # 先保留,异常情况,就返回万能码.
         alpha = random.sample(string.ascii_letters, num // 3)
         number = random.sample('0123456789' * (num // 10), num - num // 3)
         code = alpha + number
@@ -156,10 +157,10 @@ if __name__ == '__main__':
     ci = create_order()
     ci.order_id(
         pick_type=1,  # 订单类型.1=Total,2=Order
-        num=100,  # 多少个不同的订单ID.
-        same_id=5,  # 一个ID号要几个商品
+        num=30,  # 多少个不同的订单ID.
+        same_id=6,  # 一个ID号要几个商品
         container_num=1,  # 载物箱索引,1=1A,2=3A,3=6A,4=9A
-        count_range=30,  # 拣货数量的随机范围1~这个值.
+        count_range=100,  # 拣货数量的随机范围1~这个值.
         code_len=15,  # 商品码长度
         file_path='E:\工作\项目\订单\csv订单',  # 订单生成文件的路径,填写自己存放的路径.
         file_name=f'order_{file_time()}.csv'  # 文件名称
