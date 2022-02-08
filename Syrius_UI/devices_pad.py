@@ -43,6 +43,7 @@ def just_adb(i):
 
 
 if __name__ == '__main__':
+    os.system("adb devices")  # 先保证adb在本机启动.
     pool = Pool(len(devices))  # 线程数量根据设备数量来定.
     pool.map(all_connect, devices.keys())  # 连接你的机器人,并打开它对应平板的TcpIP端口,再把平板连接到大当前电脑上.多试几次.
     # pool.map(is_alive, devices.keys())  # 只是查看有多少个设备上电了.

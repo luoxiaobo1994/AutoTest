@@ -63,7 +63,7 @@ class create_order():
                 index_num += 1
                 # print(x)
         df.to_csv(f"{file_path}/{file_name}", index=False, sep=',')  # 不保存索引
-        print(f"订单生成完成,耗时{(time.time() - start_time):0.2f}秒.")
+        print(f"订单生成完成,耗时{(time.time() - start_time):0.2f}秒.文件在:{file_path}{file_name}")
         # print(df)
 
     def batch_id(self, num=1):
@@ -157,7 +157,7 @@ if __name__ == '__main__':
     ci = create_order()
     ci.order_id(
         pick_type=1,  # 订单类型.1=Total,2=Order
-        num=30,  # 多少个不同的订单ID.
+        num=10,  # 多少个不同的订单ID.
         same_id=6,  # 一个ID号要几个商品
         container_num=1,  # 载物箱索引,1=1A,2=3A,3=6A,4=9A
         count_range=100,  # 拣货数量的随机范围1~这个值.

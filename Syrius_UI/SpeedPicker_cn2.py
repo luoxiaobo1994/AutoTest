@@ -224,7 +224,7 @@ class SpeedPicker:
             return
         view_ls = tmp_text[1:]
         err_type = random.choice(view_ls)
-        logger.info(f"本次随机上报的异常是:{err_type}")
+        logger.info(f"触发上报异常功能,即将上报异常:{err_type}")
         self.driver.click_one(self.driver.find_element((By.XPATH, '//android.view.View[@text="%s"]' % err_type)))
         count = 3
         while count > 0:
@@ -234,7 +234,7 @@ class SpeedPicker:
                 logger.info(f"确定上报[{err_type2}]异常吗?")
                 if err_type2 == err_type or err_type == '其他':  # 确定弹窗起来了. 选择其他异常,询问框不一致.
                     self.driver.click_one(self.driver.find_elements(self.view)[-1])  # 最后一个view元素是'确定'按钮.
-                    logger.info(f"确定上报:[{err_type}]异常.")
+                    logger.info(f"上报:[{err_type}]异常成功.")
                     if '确定' not in self.get_text():  # 跳转流程了.
                         sleep(6)  # 点完确定,会有个长等待.
                         # self.wait_moment(err_type)  # 用这个方法应该可以,需要验证一下.
@@ -414,7 +414,7 @@ class SpeedPicker:
                 # self.inputcode('9999999999')
                 new_text = self.get_text()
                 try:
-                    num = re.findall(r'1~(.*?)之间的有效数值', ''.join(new_text))[0]
+                    num = re.findall(r'~(.*?)之间的有效数值', ''.join(new_text))[0]
                     self.inputcode(num)
                 except IndexError:
                     logger.debug(f"超出列表索引? {new_text}.")
@@ -632,9 +632,10 @@ class SpeedPicker:
             elif '拣货异常' in ls:  # 异常处理区.
                 logger.info("当前任务上报了异常：")
                 err_info = self.get_text()
-                for item in err_info:
-                    if item != '':
-                        logger.info(f"异常的信息或商品列表:{item}")
+                if "已取下" not in err_info:
+                    for item in err_info:
+                        if item != '':
+                            logger.info(f"异常的信息或商品列表:{item}")
             elif view_ls[0] == "异常上报":  # 异常上报界面.
                 logger.info("当前处于异常上报流程。")
                 self.do_err()
