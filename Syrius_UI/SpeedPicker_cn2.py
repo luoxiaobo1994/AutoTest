@@ -414,7 +414,7 @@ class SpeedPicker:
                 # self.inputcode('9999999999')
                 new_text = self.get_text()
                 try:
-                    num = re.findall(r'1~(.*?)之间的有效数值', ''.join(new_text))[0]
+                    num = re.findall(r'0~(.*?)之间的有效数值', ''.join(new_text))[0]
                     self.inputcode(num)
                 except IndexError:
                     logger.debug(f"超出列表索引? {new_text}.")
@@ -632,9 +632,10 @@ class SpeedPicker:
             elif '拣货异常' in ls:  # 异常处理区.
                 logger.info("当前任务上报了异常：")
                 err_info = self.get_text()
-                for item in err_info:
-                    if item != '':
-                        logger.info(f"异常的信息或商品列表:{item}")
+                if "已取下" not in err_info:
+                    for item in err_info:
+                        if item != '':
+                            logger.info(f"异常的信息或商品列表:{item}")
             elif view_ls[0] == "异常上报":  # 异常上报界面.
                 logger.info("当前处于异常上报流程。")
                 self.do_err()

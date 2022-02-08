@@ -44,7 +44,6 @@ class SpeedPicker:
         else:
             return 'The battery level of the robot is not obtained'
 
-
     def open_sp(self):
         # 先判断是否有异常.
         if self.err_notify():  # 异常函数会自己报异常.
@@ -414,7 +413,7 @@ class SpeedPicker:
                 # self.inputcode('9999999999')
                 new_text = self.get_text()
                 try:
-                    num = re.findall(r'1~(.*?)之间的有效数值', ''.join(new_text))[0]
+                    num = re.findall(r'0~(.*?)之间的有效数值', ''.join(new_text))[0]
                     self.inputcode(num)
                 except IndexError:
                     logger.debug(f"list index out of range? {new_text}.")
@@ -641,9 +640,10 @@ class SpeedPicker:
             elif '拣货异常' in ls:  # 异常处理区.
                 logger.info("Robot in Error area，error goods list：")
                 err_info = self.get_text()
-                for item in err_info:
-                    if item != '':
-                        logger.info(f"Error goods list:{item}")
+                if "已取下" not in err_info:
+                    for item in err_info:
+                        if item != '':
+                            logger.info(f"Error goods list:{item}")
             elif view_ls[0] == "异常上报":  # 异常上报界面.
                 logger.info("Now in the report error interface。")
                 self.do_err()
