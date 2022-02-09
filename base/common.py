@@ -222,6 +222,12 @@ def mychar():
     chr_text = random.sample(ls,random.randint(1,30))
     return ''.join(chr_text)
 
+def any_one(list_a,list_b):
+    if set(list_a) & set(list_b):
+        return True
+    else:
+        return False
+
 
 
 class just_err(Exception):
@@ -231,4 +237,6 @@ class just_err(Exception):
 
 
 if __name__ == '__main__':
-    print(mychar())
+    if any_one([1,2,3],[3,4,5,6]):
+        print(1)
+

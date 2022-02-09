@@ -327,7 +327,7 @@ class SpeedPicker:
         # 不能受干扰,要是人为把这个过去了.可能就凉了.  先试试
         count = 5
         while count > 0:
-            # self.press_ok()  # 可能有弹窗干扰.
+            # # self.press_ok()  # 可能有弹窗干扰.
             text = self.get_text(wait=3)
             if "输入" in text:
                 try:
@@ -365,7 +365,7 @@ class SpeedPicker:
         logger.info(f"wait a few seconds：{find_time}s,start picking。")
 
     def picking(self):
-        self.press_ok()
+        # self.press_ok()
         view_ls = self.get_text()
         logger.info(f"The robot is currently picking goods:{view_ls}")  # 需要记录一下进入拣货流程.
         # 情况1.
@@ -381,7 +381,7 @@ class SpeedPicker:
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
             count = 2
             while count < 5:
-                self.press_ok()  # 出现协助弹窗遮挡导致不能顺利输入问题.在载物箱流程比较严重.这里不太可能.
+                # self.press_ok()  # 出现协助弹窗遮挡导致不能顺利输入问题.在载物箱流程比较严重.这里不太可能.
                 good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + count]
                 self.inputcode(code=good_code)  # 输入了商品码。
                 if self.driver.element_display((By.XPATH, '//android.widget.EditText')):
@@ -439,7 +439,7 @@ class SpeedPicker:
             logger.info(f"Click goods number，now page text:{tmp_text}")
             total = re.findall('1~(.*?)之间', ''.join(tmp_text))[0]
             self.inputcode(total)
-            self.press_ok()
+            # self.press_ok()
         except:
             logger.warning("Click '/' fail,please check.")
 
@@ -462,7 +462,7 @@ class SpeedPicker:
         #     except:
         #         pass
         self.inputcode(num)  # 输入最大数量。
-        self.press_ok()  # 强行点确定.
+        # self.press_ok()  # 强行点确定.
         logger.info(f"Enter the maximum value [{num}] successfully.")
         self.go_to()
 
@@ -495,14 +495,16 @@ class SpeedPicker:
     def bind_carrier(self):
         # 绑定载物箱。
         logger.info("Please bind the container.")
-        self.press_ok()  # 可能超时了，先点击一下。
+        # self.press_ok()  # 可能超时了，先点击一下。
         if self.random_trigger(n=100):  # 上报异常，就不用做了。
             self.report_err()
             return  # 确保流程跳出去。
-        self.click_input()
+        if '输入' in self.get_text():
+            self.click_input()
         while True:
-            self.press_ok()
-            if "绑定载物箱" in ''.join(self.get_text()):
+            # self.press_ok()
+            tmp_text = self.get_text()
+            if any_one(["绑定载物箱", '扫码绑定 载物箱'], tmp_text):
                 self.inputcode(code=str(random.randint(1, 9999999999999)))
                 sleep(1)  # 绑定单个的时候,抓太快了,会重复输一下,此时页面换了,就没有输入框了.给个延时.
                 try:
@@ -558,19 +560,6 @@ class SpeedPicker:
                 logger.info("Raising some except,please check by yourself.")
                 exit(-500)
 
-    def page_change(self, before):
-        logger.info("Check page is change.")
-        count = 20
-        while count > 0:
-            after = self.get_text()
-            if after == before:
-                return 1
-            else:
-                sleep(1)
-                count -= 1
-        if count == 0:
-            logger.warning(f"Timeout {20} seconds but page not change.")
-            return 0
 
     def debug_check(self):
         # 调试脚本效率的,与SP无关.
@@ -625,7 +614,7 @@ class SpeedPicker:
                 if self.random_trigger(n=30):  # 触发随机。
                     self.pause_move()  # 暂停移动。
                 self.wait_moment("前往")
-            elif '请扫描载物箱码或任意格口码' in ls or "绑定载物箱" in ls:
+            elif any_one(['请扫描载物箱码或任意格口码', "绑定载物箱", '扫码绑定 载物箱'], view_ls):
                 self.bind_carrier()
             elif len({'拣货中', '请拣取正确货品并扫码', '完成', '异常上报', '拣货数量/需拣数量', '载物箱已满?', '拣货数量'} & set(view_ls)) > 2:
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
