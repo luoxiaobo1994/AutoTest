@@ -503,8 +503,8 @@ class SpeedPicker:
             self.click_input()
         while True:
             # self.press_ok()
-            tmp_text = self.get_text()
-            if any_one(["绑定载物箱", '扫码绑定 载物箱'], tmp_text):
+            tmp_text = ''.join(self.get_text()).replace(' ', '')
+            if '绑定载物箱' in tmp_text:
                 self.inputcode(code=str(random.randint(1, 9999999999999)))
                 sleep(1)  # 绑定单个的时候,抓太快了,会重复输一下,此时页面换了,就没有输入框了.给个延时.
                 try:
@@ -560,7 +560,6 @@ class SpeedPicker:
                 logger.info("Raising some except,please check by yourself.")
                 exit(-500)
 
-
     def debug_check(self):
         # 调试脚本效率的,与SP无关.
         while True:
@@ -614,9 +613,9 @@ class SpeedPicker:
                 if self.random_trigger(n=30):  # 触发随机。
                     self.pause_move()  # 暂停移动。
                 self.wait_moment("前往")
-            elif any_one(['请扫描载物箱码或任意格口码', "绑定载物箱", '扫码绑定 载物箱'], view_ls):
+            elif '绑定载物箱' in ''.join(view_ls).replace(' ', ''):
                 self.bind_carrier()
-            elif len({'拣货中', '请拣取正确货品并扫码', '完成', '异常上报', '拣货数量/需拣数量', '载物箱已满?', '拣货数量'} & set(view_ls)) > 2:
+            elif len({'拣货中', '请拣取正确货品并扫码', '完成', '异常上报', '拣货数量/需拣数量', '拣货数量'} & set(view_ls)) > 2:
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
                 self.picking()  # 封装成函数，单独处理。
             elif '已取下' in ls:

@@ -25,7 +25,7 @@ class TestKey:
 
     # 初始化关键字驱动类
     def __init__(self, driver):  # 传入一个浏览器驱动,至于是网页的还是APP都OK
-        logger.debug("Start script...")
+        logger.debug("启动脚本...")
         time.sleep(1)  # 有时候莫名其妙的卡一下,给个等待吧.
         self.driver = driver
 
