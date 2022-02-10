@@ -184,7 +184,8 @@ class SpeedPicker:
                 if self.random_trigger(n=60):
                     logger.debug(
                         f"随机刷日志, 脚本仍然在抓取文本中,当前可能拿到了一些不符合要求的:{view_ls}")
-                    sleep(2)
+                    sleep(3)
+                    break  # 尝试退出一下,因为总会重复刷这个日志.
                 if raise_except:
                     raise just_err
                 sleep(2)
@@ -455,7 +456,7 @@ class SpeedPicker:
         except:
             logger.warning("点击商品数量区域'/'失败,请检查一下.")
         self.inputcode(num)  # 输入最大数量。
-        # self.press_ok()  # 强行点确定.
+        self.click_view_text("确定")  # 强行点确定.这里不能注释掉.
         logger.info(f"输入最大数值[{num}]成功.")
         self.go_to()
 
@@ -493,8 +494,8 @@ class SpeedPicker:
             self.report_err()
             return  # 确保流程跳出去。
         if '输入' in self.get_text():
-            self.click_input()  # 没点击输入按钮的情况下,先点击输入按钮.
-        while True:  # 已经点击输入按钮的,直接输入条形码.
+            self.click_input()
+        while True:
             # self.press_ok()
             tmp_text = ''.join(self.get_text()).replace(' ', '')
             if '绑定载物箱' in tmp_text:
@@ -605,10 +606,9 @@ class SpeedPicker:
                 if self.random_trigger(n=30):  # 触发随机。
                     self.pause_move()  # 暂停移动。
                 self.wait_moment("前往")
-            elif '绑定载物箱' in ''.join(view_ls).replace(' ', ''):
-                # 目前来看,绑定载物箱,总是连在一起的,这个界面,应该能判断完.除非别的字段是这个名字.
+            elif any_one(['请扫描载物箱码或任意格口码', "绑定载物箱", '扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
                 self.bind_carrier()
-            elif len({'拣货中', '请拣取正确货品并扫码', '完成', '异常上报', '拣货数量/需拣数量', '拣货数量'} & set(view_ls)) > 2:
+            elif len({'拣货中', '请拣取正确货品并扫码', '完成', '异常上报', '拣货数量/需拣数量', '载物箱已满?', '拣货数量'} & set(view_ls)) > 2:
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
                 self.picking()  # 封装成函数，单独处理。
             elif '已取下' in ls:

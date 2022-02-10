@@ -453,16 +453,8 @@ class SpeedPicker:
             logger.info(f"Click goods number，now page text:{self.get_text()}")
         except:
             logger.warning("Click '/' fail,please check.")
-        # if self.random_trigger(n=30):  # 没有意义了.手动测试即可.
-        #     logger.info("Random event, a larger value will be entered.")
-        #     err_code = int(num) + random.randint(1, 100)  # 转数字，+1
-        #     self.inputcode(str(err_code))  # 不转个类型，老是给我报黄，看着烦。
-        #     try:
-        #         self.driver.find_element((By.XPATH, '//android.widget.EditText')).clear()  # 输入异常值之后,要清空一下.
-        #     except:
-        #         pass
         self.inputcode(num)  # 输入最大数量。
-        # self.press_ok()  # 强行点确定.
+        self.click_view_text("确定")  # 强行点确定.
         logger.info(f"Enter the maximum value [{num}] successfully.")
         self.go_to()
 
