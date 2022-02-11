@@ -2,13 +2,12 @@
 # Author: luoxiaobo
 # TIME: 2021/12/9 19:17
 
-import random
 import re
-import threading
 from time import sleep
+
 from selenium.webdriver.common.by import By
+
 from GGR import GGR
-from devices_pad import devices
 from base.common import *
 from utils.log import logger
 
@@ -36,7 +35,7 @@ class SpeedPicker:
         logger.info(f"脚本当前连接的平板:{device},Appium端口:{appium_port}")
         return browser
 
-    def robot_batery(self):
+    def robot_battery(self):
         tmp_text = self.driver.app_elements_content_desc(self.view)
         for i in tmp_text:
             if i.endswith('%') and i.split('%')[0].isdigit():
@@ -51,8 +50,7 @@ class SpeedPicker:
         # 抓取界面的小程序.
         desc = self.driver.app_elements_content_desc(self.view)  # if find element faile,will except,restart script
         if 'SkillSpace' not in ''.join(desc):
-            logger.warning(
-                "当前不在Jarvis Laauncher主界面.")
+            logger.warning("当前不在Jarvis Launcher主界面.")
             return
         else:
             image = self.driver.find_elements(self.image)
@@ -412,7 +410,6 @@ class SpeedPicker:
             except:
                 pass
             finally:
-                # self.inputcode('9999999999')
                 new_text = self.get_text()
                 try:
                     num = re.findall(r'1~(.*?)之间的有效数值', ''.join(new_text))[0]
@@ -426,7 +423,7 @@ class SpeedPicker:
             tmp_text = self.get_text()
             if '前往' in tmp_text:
                 return
-            logger.info(f"Scaned text:{tmp_text}")
+            logger.info(f"Scanned text:{tmp_text}")
             total = self.get_total(view_ls)  # 已经扫码的情 况下,最大值,这样处理一下.好点.
             if total == None:
                 logger.info(f"拣货情形4.获取最大拣货数量异常")
@@ -460,9 +457,18 @@ class SpeedPicker:
         logger.info(f"输入最大数值[{num}]成功.")
         self.go_to()
 
+    def check_time(self):
+        while True:
+            temp_text = self.get_text()
+            if "确定" in ''.join(temp_text):
+                logger.debug(f"倒计时功能检查:{temp_text}")
+            else:
+                break
+
     def go_to(self):
+        self.check_time()  # 放在这里检查一下,页面是否正常退出了.
         # 重构。
-        logger.info("当前商品拣货完成,检查啊是否有推荐点.")
+        logger.info("当前商品拣货完成,检查是否有推荐点.")
         count = 6
         while count > 0:
             try:
@@ -563,7 +569,7 @@ class SpeedPicker:
             # except:
             #     print("?????")
             print(f"view_content:{self.driver.app_elements_content_desc(self.view)}")
-            print(f"inmage-conten:{self.driver.app_elements_content_desc(self.image)}")
+            print(f"image_content:{self.driver.app_elements_content_desc(self.image)}")
             image_ico = self.driver.find_elements(self.image)
             for i in self.driver.app_elements_content_desc(self.view):
                 if "SkillSpace" in i:

@@ -8,6 +8,16 @@ from utils.log import logger
 from devices_pad import devices
 
 
+def get_devices():
+    all_devices = []
+    cmd = 'adb devices'
+    result = os.popen(cmd).readlines()[1:]
+    for item in result:
+        if item != "\n":
+            all_devices.append(str(item).split("\t")[0])
+    # print(get_time(),f"当前连接的设备有：{len(all_devices)}")
+    return all_devices
+
 def reset_keyboard(device):
     try:
         tmp_keyboard = os.popen(f"adb -s {device} shell ime list -s").readlines()
@@ -19,7 +29,7 @@ def reset_keyboard(device):
         logger.debug(f"恢复设备{device}的输入法失败.或设备未连接.")
 
 
-# for device in devices.values():
-#     reset_keyboard(device)
+for device in get_devices():
+    reset_keyboard(device)
 
-reset_keyboard("10.2.11.57:5555")
+# reset_keyboard("10.2.16.149:5555")

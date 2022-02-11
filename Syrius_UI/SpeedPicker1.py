@@ -2,13 +2,12 @@
 # Author: luoxiaobo
 # TIME: 2021/12/9 19:17
 
-import random
 import re
-import threading
 from time import sleep
+
 from selenium.webdriver.common.by import By
+
 from GGR import GGR
-from devices_pad import devices
 from base.common import *
 from utils.log import logger
 
@@ -561,7 +560,7 @@ class SpeedPicker:
             # except:
             #     print("?????")
             print(f"view_content:{self.driver.app_elements_content_desc(self.view)}")
-            print(f"inmage-conten:{self.driver.app_elements_content_desc(self.image)}")
+            print(f"image_content:{self.driver.app_elements_content_desc(self.image)}")
             image_ico = self.driver.find_elements(self.image)
             for i in self.driver.app_elements_content_desc(self.view):
                 if "SkillSpace" in i:
