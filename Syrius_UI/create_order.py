@@ -62,8 +62,9 @@ class create_order():
                 df.loc[index_num] = x  # 新增一行
                 index_num += 1
                 # print(x)
-        df.to_csv(f"{file_path}/{file_name}", index=False, sep=',')  # 不保存索引
-        print(f"订单生成完成,耗时{(time.time() - start_time):0.2f}秒.文件在:{file_path}{file_name}")
+        final_name = self.business_process(pick_type)+'_' + file_name
+        df.to_csv(f"{file_path}/{final_name}", index=False, sep=',')  # 不保存索引
+        print(f"订单生成完成,耗时{(time.time() - start_time):0.2f}秒.文件在:{file_path}{final_name}")
         # print(df)
 
     def batch_id(self, num=1):
@@ -148,7 +149,7 @@ class create_order():
     def random_time(self):
         x = [str(i) for i in list(time.localtime())]  # 时间戳
         x.append(str(random.randint(1, 1000)))
-        random.shuffle(x)  # 打乱列表顺序.
+        random.shuffle(x)  # 原地打乱列表顺序.
         y = int(''.join(x))  # 拼接,转型.
         return y
 
@@ -157,11 +158,11 @@ if __name__ == '__main__':
     ci = create_order()
     ci.order_id(
         pick_type=1,  # 订单类型.1=Total,2=Order
-        num=100,  # 多少个不同的订单ID.
-        same_id=6,  # 一个ID号要几个商品
+        num=50,  # 多少个不同的订单ID.
+        same_id=4,  # 一个ID号要几个商品
         container_num=1,  # 载物箱索引,1=1A,2=3A,3=6A,4=9A
         count_range=100,  # 拣货数量的随机范围1~这个值.
         code_len=15,  # 商品码长度
-        file_path='E:\工作\项目\订单\csv订单',  # 订单生成文件的路径,填写自己存放的路径.
-        file_name=f'order_{file_time()}.csv'  # 文件名称
+        file_path='E:\工作\项目\订单\csv订单\\',  # 订单生成文件的路径,填写自己存放的路径.
+        file_name=f'{file_time()}.csv'  # 文件名称
     )

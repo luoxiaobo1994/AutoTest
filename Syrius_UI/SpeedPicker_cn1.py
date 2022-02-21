@@ -31,7 +31,8 @@ class SpeedPicker:
     def init_driver(self):
         device = self.device_num()[0]  # 10.111.150.202 这种格式.
         appium_port = self.device_num()[1]
-        browser = GGR().browser(devices=device, platformversion='8', port=appium_port)
+        # 在这里填入安卓版本,避免跑不起来.
+        browser = GGR().browser(devices=device, platformversion='10', port=appium_port)
         logger.info(f"脚本当前连接的平板:{device},Appium端口:{appium_port}")
         return browser
 
@@ -83,8 +84,7 @@ class SpeedPicker:
                 for i in notify:
                     # The number of notifications in the upper right corner is also the image class So do a screening
                     if len(i) > 3 and '机器人' in i:
-                        logger.info(
-                            f"这个设备[{i}] 发生了一些异常,请先恢复异常.")
+                        logger.info(f"这个设备发生了一些异常:[{i}] ,请先恢复异常.")
                         return 1
             else:
                 return 0  # Jump out of the loop and do nothing
@@ -379,20 +379,23 @@ class SpeedPicker:
             total = view_ls[-4]  # 单独的最大拣货数量。  从输入开始走,可以这么拿.
             if self.random_trigger(n=30):  # 随机触发,先去掉，100%触发。
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
-            count = 2
-            while count < 5:
-                # self.press_ok()  # 出现协助弹窗遮挡导致不能顺利输入问题.在载物箱流程比较严重.这里不太可能.
-                good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + count]
-                self.inputcode(code=good_code)  # 输入了商品码。
-                if self.driver.element_display((By.XPATH, '//android.widget.EditText')):
-                    count += 1
-                else:
-                    # logger.info(f"确定成功输入了商品码.")
-                    break
+            good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + 2]
+            self.inputcode(code=good_code)  # 输入了商品码。
+            # count = 2
+            # while count < 5:
+            #     # self.press_ok()  # 出现协助弹窗遮挡导致不能顺利输入问题.在载物箱流程比较严重.这里不太可能.
+            #     good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + count]
+            #     self.inputcode(code=good_code)  # 输入了商品码。
+            #     if self.driver.element_display((By.XPATH, '//android.widget.EditText')):
+            #         count += 1
+            #     else:
+            #         # logger.info(f"确定成功输入了商品码.")
+            #         break
             if total == "1":
                 self.go_to()  # 一个商品,也要检查一下推荐点位.
                 return  # 只捡一个，扫码完成就齐活。
             elif total != '1' and total.isdigit():
+                logger.debug(f"准确获取到最大拣货数量:{total}")
                 self.input_max(total)  # 走这个流程,到这也结束了.不需要单独的return
             else:
                 logger.error(f"获取最大拣货数量错误,拿到的数据是:{total}")  # UI变了,或者人为操作,会到这.
@@ -476,6 +479,7 @@ class SpeedPicker:
             except:
                 continue
             if "请到此处附近" in before:
+                logger.debug(f"拿到推荐点位了,但是数据异常:{before}")
                 try:
                     logger.info(f"抓取到推荐点位--->{before[before.index('请到此处附近') + 1]}")
                     break
@@ -490,7 +494,7 @@ class SpeedPicker:
                 break
             else:
                 count -= 1
-                sleep(0.5)
+                # sleep(0.5)
 
     def bind_carrier(self):
         # 绑定载物箱。
@@ -509,13 +513,19 @@ class SpeedPicker:
                 sleep(1)  # 绑定单个的时候,抓太快了,会重复输一下,此时页面换了,就没有输入框了.给个延时.
                 try:
                     self.click_view_text("完成")
-                    break  # 绑定完成了
+                    # self.bind_fish()
+                    break  # 绑定完成了  
                 except:
                     pass
             elif not self.driver.element_display((By.XPATH, '//android.widget.EditText')):
                 break  # 输入框消失了,也算完活.不要一直卡着.
             else:
                 break
+
+    def bind_fish(self):
+        from utils.connect_linux import ssh
+        logger.debug("执行脚本,添加金龙鱼载具信息.")
+        ssh(ip='10.2.9.181', cmds=['python3 lxb/storage.py'])
 
     def other_situation(self):
         # 开另一个线程来检测是否发生异常.持续检测的线程,就不要经常刷新日志了.
@@ -585,8 +595,9 @@ class SpeedPicker:
     def main(self):
         """主业务流程，通过不断的抓取页面信息。去确定当前SpeedPicker运行状态"""
         self.open_sp()
+        # self.bind_fish()
         while True:
-            self.press_ok()  # 应对随时弹出来的需要协助，提示框。
+            # self.press_ok()  # 应对随时弹出来的需要协助，提示框。
             try:
                 view_ls = self.get_text(wait=15)  # 当前页面文本信息。
             except:
@@ -624,12 +635,25 @@ class SpeedPicker:
                 logger.info("完成一单,不错!")
                 logger.info('~*' * 25 + '\n')
                 self.wait_moment('已取下')
+                # self.bind_fish()
+
             elif '拣货异常' in ls:  # 异常处理区.
-                logger.info("当前任务上报了异常：")
-                err_info = self.get_text()
-                for item in err_info:
-                    if item != '':
-                        logger.info(f"异常的信息或商品列表:{item}")
+                logger.info("当前任务上报了异常,异常信息如下:")
+                err_info = self.get_text()  # 可以根据'UPC:'去拿到有几个异常商品.
+                err_goods_ls = []
+                for item in err_info:  # 先拿到有几个异常订单.
+                    if item.startswith('UPC:'):
+                        err_goods_ls.append(item)
+                for goods in err_goods_ls:
+                    logger.info(
+                        f"商品码:{goods.split('UPC:')[-1]},"
+                        f"名称:{err_info[err_info.index(goods) - 1]},"
+                        f"商品储位:{err_info[err_info.index(goods) - 3]},"
+                        f"{err_info[err_info.index(goods) - 4]},"  # 订单
+                        f"商品异常:{err_info[err_info.index(goods) - 5]}"
+                    )
+                self.click_view_text("确定")  #
+                self.press_ok()  # 这里可能有波次完成需要确定.
             elif view_ls[0] == "异常上报":  # 异常上报界面.
                 logger.info("当前处于异常上报流程。")
                 self.do_err()

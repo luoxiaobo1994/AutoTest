@@ -378,20 +378,24 @@ class SpeedPicker:
             total = view_ls[-4]  # 单独的最大拣货数量。  从输入开始走,可以这么拿.
             if self.random_trigger(n=30):  # 随机触发,先去掉，100%触发。
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
-            count = 2
-            while count < 5:
-                # self.press_ok()  # 出现协助弹窗遮挡导致不能顺利输入问题.在载物箱流程比较严重.这里不太可能.
-                good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + count]
-                self.inputcode(code=good_code)  # 输入了商品码。
-                if self.driver.element_display((By.XPATH, '//android.widget.EditText')):
-                    count += 1
-                else:
-                    # logger.info(f"确定成功输入了商品码.")
-                    break
+
+            good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + 2]
+            self.inputcode(code=good_code)  # 输入了商品码。
+            # count = 2
+            # while count < 5:
+            #     # self.press_ok()  # 出现协助弹窗遮挡导致不能顺利输入问题.在载物箱流程比较严重.这里不太可能.
+            #     good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + count]
+            #     self.inputcode(code=good_code)  # 输入了商品码。
+            #     if self.driver.element_display((By.XPATH, '//android.widget.EditText')):
+            #         count += 1
+            #     else:
+            #         # logger.info(f"确定成功输入了商品码.")
+            #         break
             if total == "1":
                 self.go_to()  # 一个商品,也要检查一下推荐点位.
                 return  # 只捡一个，扫码完成就齐活。
             elif total != '1' and total.isdigit():
+                logger.debug(f"Get max picking num:{total}")
                 self.input_max(total)  # 走这个流程,到这也结束了.不需要单独的return
             else:
                 logger.error(f"Get total number error,get text is {total}")  # UI变了,或者人为操作,会到这.
@@ -481,7 +485,7 @@ class SpeedPicker:
                 break
             else:
                 count -= 1
-                sleep(0.5)
+                # sleep(0.5)
 
     def bind_carrier(self):
         # 绑定载物箱。
