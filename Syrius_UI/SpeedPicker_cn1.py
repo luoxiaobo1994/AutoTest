@@ -49,33 +49,36 @@ class SpeedPicker:
         if self.err_notify():  # 异常函数会自己报异常.
             exit(-404)  # 走不动了,直接停吧.
         # 抓取界面的小程序.
-        desc = self.driver.app_elements_content_desc(self.view)  # if find element faile,will except,restart script
-        if 'SkillSpace' not in ''.join(desc):
-            logger.warning("当前不在Jarvis Launcher主界面.")
-            return
-        else:
-            image = self.driver.find_elements(self.image)
-            soft_index = self.driver.app_elements_content_desc(self.view)
-            for i in soft_index:
-                if 'SpeedPicker' in i:
-                    x = i.split('\n')[::-1]
-                    sp_index = x.index('SpeedPicker') + 1  # 因为反过来了.从0开始.
-                    self.driver.click_one(image[-sp_index])
-                    logger.info("尚未启动SpeedPicker,即将自动启动SpeedPicker.")
-                    sleep(2)
-                    tmp_text = self.get_text()
-                    for item in tmp_text:
-                        if 'version:' in item:
-                            logger.info(f"SpeedPicker的版本是:{item.split(':')[-1]}")
-                            self.wait_moment(item, i=False, without="退出")
-                            new_text = self.get_text()
-                            if item in new_text and '退出' in new_text:
-                                logger.warning(f"发生了一些异常,SpeedPicker不能正常启动:{new_text}")
-                                exit(-404)
-                    # self.wait_moment("version:") 这是部分文本.  # 'version:1.5.730'
-                    break
+        try:
+            desc = self.driver.app_elements_content_desc(self.view)  # if find element faile,will except,restart script
+            if 'SkillSpace' not in ''.join(desc):
+                logger.warning("当前不在Jarvis Launcher主界面.")
+                return
             else:
-                logger.warning(f"这个设备{self.device_num()[0]}还没有安装SpeedPicker, 请先安装.")
+                image = self.driver.find_elements(self.image)
+                soft_index = self.driver.app_elements_content_desc(self.view)
+                for i in soft_index:
+                    if 'SpeedPicker' in i:
+                        x = i.split('\n')[::-1]
+                        sp_index = x.index('SpeedPicker') + 1  # 因为反过来了.从0开始.
+                        self.driver.click_one(image[-sp_index])
+                        logger.info("尚未启动SpeedPicker,即将自动启动SpeedPicker.")
+                        sleep(2)
+                        tmp_text = self.get_text()
+                        for item in tmp_text:
+                            if 'version:' in item:
+                                logger.info(f"SpeedPicker的版本是:{item.split(':')[-1]}")
+                                self.wait_moment(item, i=False, without="退出")
+                                new_text = self.get_text()
+                                if item in new_text and '退出' in new_text:
+                                    logger.warning(f"发生了一些异常,SpeedPicker不能正常启动:{new_text}")
+                                    exit(-404)
+                        # self.wait_moment("version:") 这是部分文本.  # 'version:1.5.730'
+                        break
+                else:
+                    logger.warning(f"这个设备{self.device_num()[0]}还没有安装SpeedPicker, 请先安装.")
+        except:
+            return
 
     def err_notify(self):
         try:
@@ -600,9 +603,9 @@ class SpeedPicker:
             # self.press_ok()  # 应对随时弹出来的需要协助，提示框。
             try:
                 view_ls = self.get_text(wait=15)  # 当前页面文本信息。
+                ls = ''.join(view_ls)  # 这个是长文本。用来做一些特殊判断。
             except:
                 continue
-            ls = ''.join(view_ls)  # 这个是长文本。用来做一些特殊判断。
             use_text = {'等待任务中', '绑定载物箱', '载物箱已满?', '前往', '请扫描载物箱码或任意格口码', '已取下', '拣货异常', '拣货中', '异常上报', '输入', '暂停',
                         '恢复', '请取下载物箱 或 卸载载具上的货物', '打包'}
             if self.random_trigger(n=30):
@@ -620,7 +623,7 @@ class SpeedPicker:
             elif '前往' in view_ls:
                 locate = view_ls[view_ls.index('前往') + 1]  # 前往的后一个，就是目标地点。
                 logger.info(f"机器人正在前往:{locate},请等待。")
-                if self.random_trigger(n=30):  # 触发随机。
+                if self.random_trigger(n=300000):  # 触发随机。
                     self.pause_move()  # 暂停移动。
                 self.wait_moment("前往")
             elif any_one(['请扫描载物箱码或任意格口码', "绑定载物箱", '扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
