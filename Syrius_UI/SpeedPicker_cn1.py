@@ -32,7 +32,7 @@ class SpeedPicker:
         device = self.device_num()[0]  # 10.111.150.202 这种格式.
         appium_port = self.device_num()[1]
         # 在这里填入安卓版本,避免跑不起来.
-        browser = GGR().browser(devices=device, platformversion='10', port=appium_port)
+        browser = GGR().browser(devices=device, platformversion='8', port=appium_port)
         logger.info(f"脚本当前连接的平板:{device},Appium端口:{appium_port}")
         return browser
 
@@ -418,8 +418,9 @@ class SpeedPicker:
             finally:
                 new_text = self.get_text()
                 try:
-                    num = re.findall(r'1~(.*?)之间的有效数值', ''.join(new_text))[0]
+                    num = re.findall(r'~(.*?)之间的有效数值', ''.join(new_text))[0]
                     self.inputcode(num)
+                    self.click_view_text("确定")
                 except IndexError:
                     logger.debug(f"超出列表索引? {new_text}.")
                     pass  # 抓不到.退出去重来一下试试.
@@ -442,7 +443,7 @@ class SpeedPicker:
             self.driver.click_element((By.XPATH, '//*[contains(@text,"/")]'), raise_except=True)  # 点击了数字框。默认点到第一个。
             tmp_text = self.get_text()
             logger.info(f"点击商品数量,当前文本:{tmp_text}")
-            total = re.findall('1~(.*?)之间', ''.join(tmp_text))[0]
+            total = re.findall('0~(.*?)之间', ''.join(tmp_text))[0]
             self.inputcode(total)
             # self.press_ok()
         except:
