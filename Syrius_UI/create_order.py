@@ -47,7 +47,7 @@ class create_order():
         for id in range(start, start + num):  # 不同的ID号个数.
             for count in range(same_id):  # 一个相同ID号,有多少个.
                 # 得新生成数据,不然就是same_id个相同的商品数据了.  有新增字段,这里也要对应新增函数.
-                x = (id, self.batch_id(),
+                x = (id, self.batch_id(id),
                      self.business_type(),
                      self.business_process(pick_type),  # 拣货类型,传入索引.1=Total,2=Order
                      self.priority(),
@@ -158,8 +158,8 @@ if __name__ == '__main__':
     ci = create_order()
     ci.order_id(
         pick_type=1,  # 订单类型.1=Total,2=Order
-        num=200,  # 多少个不同的订单ID.
-        same_id=2,  # 一个ID号要几个商品
+        num=20,  # 多少个不同的订单ID.
+        same_id=3,  # 一个ID号要几个商品
         container_num=1,  # 载物箱索引,1=1A,2=3A,3=6A,4=9A
         count_range=10,  # 拣货数量的随机范围1~这个值.
         code_len=20,  # 商品码长度
