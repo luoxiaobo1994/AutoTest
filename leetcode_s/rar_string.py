@@ -23,7 +23,7 @@ class Solution:
     def compressString2(self,test_string):
         dic = {}
         for item in range(len(test_string)):
-            if 
+            pass
 
 s = Solution()
 print(s.compressString('abcccaaaa'))

@@ -383,16 +383,6 @@ class SpeedPicker:
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
             good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + 2]
             self.inputcode(code=good_code)  # 输入了商品码。
-            # count = 2
-            # while count < 5:
-            #     # self.press_ok()  # 出现协助弹窗遮挡导致不能顺利输入问题.在载物箱流程比较严重.这里不太可能.
-            #     good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + count]
-            #     self.inputcode(code=good_code)  # 输入了商品码。
-            #     if self.driver.element_display((By.XPATH, '//android.widget.EditText')):
-            #         count += 1
-            #     else:
-            #         # logger.info(f"确定成功输入了商品码.")
-            #         break
             if total == "1":
                 self.go_to()  # 一个商品,也要检查一下推荐点位.
                 return  # 只捡一个，扫码完成就齐活。
@@ -401,28 +391,6 @@ class SpeedPicker:
                 self.input_max(total)  # 走这个流程,到这也结束了.不需要单独的return
             else:
                 logger.error(f"获取最大拣货数量错误,拿到的数据是:{total}")  # UI变了,或者人为操作,会到这.
-        # 还没扫码,但是点了输入按钮.
-        # elif '请拣取正确货品并扫码' in view_ls and view_ls[view_ls.index('请拣取正确货品并扫码') + 3] == '0':
-        #     logger.info(f"拣货情况2,点击了输入按钮,但是未输入商品码.")
-        #     tmp_text = self.get_text()
-        #     self.inputcode(code=tmp_text[tmp_text.index('请拣取正确货品并扫码') + 2])
-        #     self.input_total()
-        #
-        # elif '拣货数量' in view_ls:  # 弹出了输入商品数字的框。
-        #     logger.info("拣货情形3,扫描了商品码,点击了商品数量编辑弹窗,但未完成拣货.")
-        #     try:
-        #         self.driver.find_element((By.XPATH, '//android.widget.EditText')).clear()  # 尝试一下清空.
-        #     except:
-        #         pass
-        #     finally:
-        #         new_text = self.get_text()
-        #         try:
-        #             num = re.findall(r'~(.*?)之间的有效数值', ''.join(new_text))[0]
-        #             self.inputcode(num)
-        #             self.click_view_text("确定")
-        #         except IndexError:
-        #             logger.debug(f"超出列表索引? {new_text}.")
-        #             pass  # 抓不到.退出去重来一下试试.
         else:
             # ['载物箱已满?', '拣货中', '6923450659861', '第5个商品', '1/3', '完成', '异常上报']
             logger.info("拣货情形2.拣货未完成.")
@@ -435,46 +403,27 @@ class SpeedPicker:
                     logger.debug(f"拆分的数据:{x}")
                     if len(x) == 2 and x[0].isdigit() and x[1].isdigit():
                         max_num = x[1]
-            # logger.info(f"Scanned text:{tmp_text}")
-            # total = self.get_total(view_ls)  # 已经扫码的情 况下,最大值,这样处理一下.好点.
-            # if total == None:
-            #     logger.info(f"拣货情形4.获取最大拣货数量异常")
-            #     return  # 有抓不到的情况
-            # logger.info(f"扫码的商品需要捡取:[{total}]个.")
             logger.debug(f"最大拣货数量为:{max_num}")
             self.input_max(max_num)
-
-    def input_total(self):
-        try:
-            self.driver.click_element((By.XPATH, '//*[contains(@text,"/")]'), raise_except=True)  # 点击了数字框。默认点到第一个。
-            tmp_text = self.get_text()
-            logger.info(f"点击商品数量,当前文本:{tmp_text}")
-            total = re.findall('0~(.*?)之间', ''.join(tmp_text))[0]
-            self.inputcode(total)
-            # self.press_ok()
-        except:
-            logger.warning("Click '/' fail,please check.")
 
     def input_max(self, num):
         logger.info("超过1个商品需要捡取,现在即将输入最大拣货数量.")
         if self.random_trigger(n=300):  # 上报异常。
             self.report_err()
             return
-        try:
-            self.driver.click_element((By.XPATH, '//*[contains(@text,"/")]'), raise_except=True)  # 点击了数字框。默认点到第一个。
-            logger.info(f"点击商品拣货数量,当前文本:{self.get_text()}")
-        except:
-            logger.warning("点击商品数量区域'/'失败,请检查一下.")
-        # self.inputcode(num)  # 输入最大数量。  旧的方式,先保留.
-        # self.click_view_text("确定")  # 强行点确定.这里不能注释调.
-        # 新的输入最大值方式,调自研的键盘.
-        img_btn = self.driver.find_elements((By.XPATH, '//android.widget.Image'))
-        self.driver.click_one(img_btn[-2])  # 点击删除键,让1/n变为0/n
-        logger.debug(f"点击删除按键,清空已有数据.")
-        sleep(0.5)
-        for i in str(num):
-            self.click_view_text(i, count=1)  # 真的蛋疼,数值显示区域竟然不是输入框组件,只能一个一个点.
-        self.driver.click_one(img_btn[-1])  # 点击界面的回车键.
+        count = 3
+        while count > 0:  # 避免死循环
+            tmp_text = self.get_text()
+            if '输入' in tmp_text:  # 当前点位还有其他商品需要捡取.
+                break
+            elif '前往' in tmp_text:
+                break
+            else:
+                view = self.driver.find_elements(self.view)
+                for i in range(int(num)):  # 根据最大拣货数量点击.
+                    # print(f"点击第{i}次+")
+                    self.driver.click_one(view[-5])
+                count -= 1
         logger.info(f"输入最大数值[{num}]成功.")
         self.go_to()
 

@@ -139,7 +139,7 @@ class TestKey:
             element.click()
             # time.sleep(1)  # 点完停顿1s避免下一步操作时,页面没来得及变化.抓元素是显示等待,无所谓这个时间.
         except:
-            self.screenshot()
+            # self.screenshot()  # 保存截图
             # time.sleep(0.5)  # 有时候循环抓取,避免死循环一直报错.
             logger.error("元素点击失败,检查一下.")
             if raise_except:
