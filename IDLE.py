@@ -20,3 +20,10 @@ import  json
 import pandas as pd
 
 
+ls1 = ("Order ID (M)", "Batch ID (O)", "Business type (M)", "Business process (M)", "Priority (M)",
+                "Container type (M)"
+                , "Item name (M)", "Item code(M)", "Item image link (O)", "Item count (M)", "Bin location (M)",
+                "Sequential execution (O)")
+ls2 = (1,2,3,4,5,6,7,8,9,10,11,12)
+dd = dict(zip(ls1,ls2))
+print(dd)

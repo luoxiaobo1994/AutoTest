@@ -416,14 +416,14 @@ class SpeedPicker:
             tmp_text = self.get_text()
             if '输入' in tmp_text:  # 当前点位还有其他商品需要捡取.
                 break
-            elif '前往' in tmp_text:
+            elif '前往' in tmp_text:  # 拣货完成,前往下一个目标点. 也该跳出循环.
                 break
             else:
                 view = self.driver.find_elements(self.view)
                 for i in range(int(num)):  # 根据最大拣货数量点击.
                     # print(f"点击第{i}次+")
-                    self.driver.click_one(view[-5])
-                count -= 1
+                    self.driver.click_one(view[-5])  # + 图标. 现在只能用这个土办法了.
+                count -= 1  # 避免原地死循环的计数
         logger.info(f"输入最大数值[{num}]成功.")
         self.go_to()
 
@@ -604,7 +604,8 @@ class SpeedPicker:
                 logger.info('~*' * 25 + '\n')
                 self.wait_moment('已取下')
                 # self.bind_fish()
-
+            elif '安装载具' in view_ls:
+                self.click_view_text("完成")
             elif '拣货异常' in ls:  # 异常处理区.
                 logger.info("当前任务上报了异常,异常信息如下:")
                 err_info = self.get_text()  # 可以根据'UPC:'去拿到有几个异常商品.
