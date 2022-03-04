@@ -374,12 +374,12 @@ class SpeedPicker:
             if self.random_trigger(n=0):  # 默认不打开,设置为1为常开.
                 self.find_goods()  # 延时时间,到这里设置.
             logger.info("拣货情形1,还未扫码.")
-            if self.random_trigger(n=15):  # 1/15 概率，上报异常。
+            if self.random_trigger(n=50):  # 1/15 概率，上报异常。
                 self.report_err()
                 return  # 结束拣货流程.
             self.click_view_text("输入")  # 点击输入按钮
             total = view_ls[-4]  # 单独的最大拣货数量。  从输入开始走,可以这么拿.
-            if self.random_trigger(n=30):  # 随机触发,先去掉，100%触发。
+            if self.random_trigger(n=50):  # 随机触发,先去掉，100%触发。
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
             good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + 2]
             self.inputcode(code=good_code)  # 输入了商品码。
@@ -596,7 +596,7 @@ class SpeedPicker:
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
                 self.picking()  # 封装成函数，单独处理。
             elif '已取下' in ls:
-                logger.debug(f"波次信息:{self.get_text()}")
+                logger.debug(f"波次信息:{self.get_text()[-2]}")
                 self.press_ok()  # 确定波次.
                 # 异常处理区,或者订单异常终止,都是这个流程,无需重复点.
                 self.click_view_text("已取下")  # 强点.
