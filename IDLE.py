@@ -7,7 +7,6 @@ import subprocess
 import time
 import traceback
 from multiprocessing.dummy import Pool
-
 import pandas
 import yaml
 import re
