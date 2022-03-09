@@ -164,6 +164,7 @@ def dict_to_csv(data, file):
 
 
 def get_devices():
+    # 获取所有连接设备的列表
     all_devices = []
     cmd = 'adb devices'
     result = os.popen(cmd).readlines()[1:]
@@ -172,6 +173,10 @@ def get_devices():
             all_devices.append(str(item).split("\t")[0])
     # print(get_time(),f"当前连接的设备有：{len(all_devices)}")
     return all_devices
+
+def get_android_version(device):
+    version = os.popen(f"adb -s {device} shell getprop ro.build.version.release").readline()
+    return version
 
 
 def do_something(devices):
@@ -237,6 +242,7 @@ class just_err(Exception):
 
 
 if __name__ == '__main__':
-    if any_one([1,2,3],[3,4,5,6]):
-        print(1)
+    devices = get_devices()
+    for i in devices:
+        print(get_android_version(i))
 

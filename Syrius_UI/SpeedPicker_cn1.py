@@ -19,6 +19,20 @@ class SpeedPicker:
         # sleep(10)  # 做一个长等待，没办法。加载慢。
         self.view = (By.XPATH, '//android.view.View')
         self.image = (By.XPATH, '//android.widget.ImageView')
+        self.notify()  # 刷新一些提醒，避免遗漏配置。
+
+    def init_driver(self):
+        device = self.device_num()[0]  # 10.111.150.202 这种格式.
+        appium_port = self.device_num()[1]
+        # 在这里填入安卓版本,避免跑不起来.
+        browser = GGR().browser(devices=device, platformversion=get_android_version(device),
+                                port=appium_port)  # 自己获取安卓版本
+        logger.info(f"脚本当前连接的平板:{device},安卓版本：{get_android_version(device)},Appium端口:{appium_port}")
+        return browser
+
+    def notify(self):
+        """ 脚本启动的一些注意事项提醒 """
+        logger.debug("注意事项：1.SpeedPicker请开启快速拣货功能。\n2.注意平板连接到此电脑。\n3.注意先启动Appium服务。")
 
     def device_num(self):
         num = int(__file__.split('\\')[-1].split('.')[0].split('cn')[-1]) - 1  # 序号从0开始
@@ -27,14 +41,6 @@ class SpeedPicker:
             return devices_ls[num], 4725 + num * 5  # 每个设备之间，间隔5个以上
         except:
             logger.warning("获取设备UDID失败了,检查一下.")
-
-    def init_driver(self):
-        device = self.device_num()[0]  # 10.111.150.202 这种格式.
-        appium_port = self.device_num()[1]
-        # 在这里填入安卓版本,避免跑不起来.
-        browser = GGR().browser(devices=device, platformversion='8', port=appium_port)
-        logger.info(f"脚本当前连接的平板:{device},Appium端口:{appium_port}")
-        return browser
 
     def robot_battery(self):
         tmp_text = self.driver.app_elements_content_desc(self.view)
@@ -117,13 +123,13 @@ class SpeedPicker:
             sleep(0.1)
 
     def random_trigger(self, n=30):  # Probability value
-        # Random number result, used to trigger an operation.
-        if n == 0:  # Set to 0 to disable the random function.
+        # 获取一个随机数值，选中了，就触发随机事件。
+        if n == 0:  # 设置为0，关闭随机事件。
             return 0
-        elif n == 1:  # Set to 1 to keep this function on.
+        elif n == 1:  # 设置为1，必中事件。
             return 1
         elif n >= 2:
-            num = random.randint(2, n + 2)  # Start with 2 and pick a number at random
+            num = random.randint(2, n + 2)  # 1和0被排除，得多加两个。
             if num == n:  # Draw this number and turn on this function
                 # logger.info(A random event occurred。")
                 return 1  # return True
@@ -131,7 +137,7 @@ class SpeedPicker:
             return 0
 
     def pause_move(self, time_out=25):  # 不宜过长,省得脚本卡时间,恢复按钮没了.
-        """Pause movement, timeout max. 30s"""
+        """ 暂停移动功能 """
         view_text = self.driver.app_elements_text((By.XPATH, '//android.view.View'))
         wait_time = random.randint(1, time_out)
         if '暂停' in view_text:
@@ -146,12 +152,12 @@ class SpeedPicker:
                 logger.info("恢复按钮消失了,可能是人为点击了.")
                 return
 
-    def press_ok(self, num=1):
+    def press_ok(self, num=1, timeout=0.1):
         # 点击确定按钮
         count = num
         while count > 0:
             try:
-                self.driver.click_element((By.XPATH, '//*[contains(@text,"确定")]'), wait=0.1)  # Not too long。
+                self.driver.click_element((By.XPATH, '//*[contains(@text,"确定")]'), wait=timeout)  # Not too long。
                 break
             except:
                 count -= 1
@@ -181,27 +187,21 @@ class SpeedPicker:
                         except:
                             pass  # The function needs to be improved
                         logger.info("当前页面没抓到文本,如果持续刷新这个日志,请前往检查一下.")
+                        sleep(10)  # 这里也要睡眠一下，避免刷日志太快了。
             except TypeError:
                 if self.random_trigger(n=60):
                     logger.debug(
                         f"随机刷日志, 脚本仍然在抓取文本中,当前可能拿到了一些不符合要求的:{view_ls}")
-                    sleep(3)
+                    sleep(10)
                     break  # 尝试退出一下,因为总会重复刷这个日志.
                 if raise_except:
                     raise just_err
-                sleep(2)
+                sleep(5)
             except Exception as e:
                 logger.info(f"抓取文本,出现了一些别的异常:{e}")
         if count == 0:
             logger.info(f"这个设备:{self.device_num()[0]}有一段时间没抓到文本了,去检查一下.")
-            # raise just_err  # 这个异常,并不能重启脚本.
-
-    def get_text2(self, wait=2):
-        view_ls = self.driver.app_elements_text(self.view, wait)
-        if view_ls:  # 抓到才出去.在sp里,必定是会有文本页面的.
-            return view_ls
-        else:
-            return []
+            sleep(10)  # 这里也要睡眠一下，避免刷日志太快了。
 
     def report_err(self):
         view_ls = self.get_text()
@@ -232,11 +232,12 @@ class SpeedPicker:
         while count > 0:
             try:
                 view_ls2 = self.get_text()
-                err_type2 = re.findall("确定(.*?)吗", ''.join(view_ls2))[0]
-                logger.info(f"确定上报[{err_type2}]异常吗?")
+                err_type2 = re.findall("确定(.*?)吗", ''.join(view_ls2))[0]  # 拿到的异常
+                logger.info(f"确定上报[{err_type2}]异常吗?")  # 询问弹窗.
                 if err_type2 == err_type or err_type == '其他':  # 确定弹窗起来了. 选择其他异常,询问框不一致.
                     self.driver.click_one(self.driver.find_elements(self.view)[-1])  # 最后一个view元素是'确定'按钮.
                     logger.info(f"确定上报:[{err_type}]异常.")
+                    self.press_ok(timeout=1)  # 这里已经点击了确定，为什么还会卡呢？
                     if '确定' not in self.get_text():  # 跳转流程了.
                         sleep(6)  # 点完确定,会有个长等待.
                         # self.wait_moment(err_type)  # 用这个方法应该可以,需要验证一下.
@@ -248,7 +249,7 @@ class SpeedPicker:
             except:
                 count -= 1
                 sleep(1)
-        if err_type == '载具不符':
+        if err_type == '载具合适':
             count = 20
             while count > 0:
                 try:
@@ -378,33 +379,39 @@ class SpeedPicker:
                 self.report_err()
                 return  # 结束拣货流程.
             self.click_view_text("输入")  # 点击输入按钮
-            total = view_ls[-4]  # 单独的最大拣货数量。  从输入开始走,可以这么拿.
+            # total = view_ls[-4]  # 单独的最大拣货数量。  从输入开始走,可以这么拿.
             if self.random_trigger(n=50):  # 随机触发,先去掉，100%触发。
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
             good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + 2]
             self.inputcode(code=good_code)  # 输入了商品码。
-            if total == "1":
-                self.go_to()  # 一个商品,也要检查一下推荐点位.
-                return  # 只捡一个，扫码完成就齐活。
-            elif total != '1' and total.isdigit():
-                logger.debug(f"准确获取到最大拣货数量:{total}")
-                self.input_max(total)  # 走这个流程,到这也结束了.不需要单独的return
-            else:
-                logger.error(f"获取最大拣货数量错误,拿到的数据是:{total}")  # UI变了,或者人为操作,会到这.
+            self.driver.click_element((By.XPATH, '//*[@text="完成"]'))
+            logger.debug(f"通过点击[完成],快速完成拣货.")
+            self.go_to()
+            # 下面这部分代码不要删除,旧功能
+            # if total == "1":
+            #     self.go_to()  # 一个商品,也要检查一下推荐点位.
+            #     return  # 只捡一个，扫码完成就齐活。
+            # elif total != '1' and total.isdigit():
+            #     logger.debug(f"准确获取到最大拣货数量:{total}")
+            #     self.input_max(total)  # 走这个流程,到这也结束了.不需要单独的return
+            # else:
+            #     logger.error(f"获取最大拣货数量错误,拿到的数据是:{total}")  # UI变了,或者人为操作,会到这.
         else:
-            # ['载物箱已满?', '拣货中', '6923450659861', '第5个商品', '1/3', '完成', '异常上报']
-            logger.info("拣货情形2.拣货未完成.")
-            tmp_text = self.get_text()
-            if '前往' in tmp_text:
-                return
-            for i in tmp_text:
-                if '/' in i:
-                    x = i.split('/')
-                    logger.debug(f"拆分的数据:{x}")
-                    if len(x) == 2 and x[0].isdigit() and x[1].isdigit():
-                        max_num = x[1]
-            logger.debug(f"最大拣货数量为:{max_num}")
-            self.input_max(max_num)
+            self.driver.click_element((By.XPATH, '//*[@text="完成"]'))
+            logger.debug(f"通过点击[完成],快速完成拣货.")
+            # # ['载物箱已满?', '拣货中', '6923450659861', '第5个商品', '1/3', '完成', '异常上报']
+            # logger.info("拣货情形2.拣货未完成.")
+            # tmp_text = self.get_text()
+            # if '前往' in tmp_text:
+            #     return
+            # for i in tmp_text:
+            #     if '/' in i:
+            #         x = i.split('/')
+            #         logger.debug(f"拆分的数据:{x}")
+            #         if len(x) == 2 and x[0].isdigit() and x[1].isdigit():
+            #             max_num = x[1]
+            # logger.debug(f"最大拣货数量为:{max_num}")
+            # self.input_max(max_num)
 
     def input_max(self, num):
         logger.info("超过1个商品需要捡取,现在即将输入最大拣货数量.")
