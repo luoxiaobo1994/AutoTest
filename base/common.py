@@ -22,11 +22,13 @@ def get_time():
     time_1 = ':'.join(str(i).zfill(2) for i in now_time[3:6])
     return date_1 + ' ' + time_1 + ' '
 
+
 def file_time():
     now_time = time.localtime()  # [2020, 11, 30, 12, 3, 5, 0, 335, 0]
     date_1 = '-'.join(str(i).zfill(2) for i in now_time[:3])
     time_1 = '_'.join(str(i).zfill(2) for i in now_time[3:6])
     return date_1 + '_' + time_1
+
 
 # 也是时间戳,不带日期,只有时分秒的.
 def get_timer():
@@ -174,6 +176,7 @@ def get_devices():
     # print(get_time(),f"当前连接的设备有：{len(all_devices)}")
     return all_devices
 
+
 def get_android_version(device):
     version = os.popen(f"adb -s {device} shell getprop ro.build.version.release").readline()
     return version
@@ -216,6 +219,7 @@ def reset_keyboard(device):
     except:
         logger.debug(f"恢复设备{device}的输入法失败.")
 
+
 def mychar():
     special = '~!@#$%^&*( )-_/?.,>[]==+'
     alph = string.ascii_letters
@@ -223,16 +227,16 @@ def mychar():
     jap = 'おはようございますこんにちははじめまして、どうぞお愿（ねが）いいたします'
     kor = '생일 축하합니다새해복 많이받세요감사합니다 ! 고맙습니다그래요? 그렇습니까?'
     ch = '的一是在不了有和人这中大为上个国我以要他时来用们生到作地于出就分对成会可主发年动同工也能下过子说产种面而方后多定行学法所民'
-    ls = special+alph+num+jap+kor+ch
-    chr_text = random.sample(ls,random.randint(1,30))
+    ls = special + alph + num + jap + kor + ch
+    chr_text = random.sample(ls, random.randint(1, 30))
     return ''.join(chr_text)
 
-def any_one(list_a,list_b):
+
+def any_one(list_a, list_b):
     if set(list_a) & set(list_b):
         return True
     else:
         return False
-
 
 
 class just_err(Exception):
@@ -245,4 +249,3 @@ if __name__ == '__main__':
     devices = get_devices()
     for i in devices:
         print(get_android_version(i))
-

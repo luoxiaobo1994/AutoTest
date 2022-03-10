@@ -31,10 +31,10 @@ class create_order():
 
     def colums(self, ):
         # csv 文件的表头.有新增,修改字段名称,就在这里修改.
-        return ("Order ID (M)", "Batch ID (O)", "Business type (M)", "Business process (M)", "Priority (M)",
-                "Container type (M)"
-                , "Item name (M)", "Item code(M)", "Item image link (O)", "Item count (M)", "Bin location (M)",
-                "Sequential execution (O)")
+        return ("Order ID(M)", "Batch ID(O)", "Business Type(M)", "Business Process(M)", "Priority(M)",
+                "Container Type(M)"
+                , "Item Name(M)", "Item Code(M)", "Item Image URL(O)", "Item Count(M)", "Bin Location(M)",
+                "Sequential Execution(O)")
 
     def order_id(self, num=1, same_id=1, pick_type=1, container_num=1, code_len=20, count_range=99,
                  file_path='', file_name='order.csv'):
@@ -162,11 +162,11 @@ if __name__ == '__main__':
     ci = create_order()
     ci.order_id(
         pick_type=1,  # 订单类型.1=Total,2=Order
-        num=20,  # 多少个不同的订单ID.
-        same_id=1,  # 一个ID号要几个商品
+        num=1,  # 多少个不同的订单ID.
+        same_id=32,  # 一个ID号要几个商品
         container_num=1,  # 载物箱索引,1=1A,2=3A,3=6A,4=9A
         count_range=10,  # 拣货数量的随机范围1~这个值.
-        code_len=20,  # 商品码长度
+        code_len=15,  # 商品码长度
         file_path='E:\工作\项目\订单\csv订单\\',  # 订单生成文件的路径,填写自己存放的路径.
         file_name=f'{file_time()}.csv'  # 文件名称
     )

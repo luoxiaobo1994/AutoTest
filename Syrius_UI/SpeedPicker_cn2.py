@@ -4,7 +4,9 @@
 
 import re
 from time import sleep
+
 from selenium.webdriver.common.by import By
+
 from GGR import GGR
 from base.common import *
 from utils.log import logger
@@ -203,12 +205,6 @@ class SpeedPicker:
             logger.info(f"这个设备:{self.device_num()[0]}有一段时间没抓到文本了,去检查一下.")
             sleep(10)  # 这里也要睡眠一下，避免刷日志太快了。
             return  # 跳出去
-
-    def get_text22(self, wait=3):
-        """ 新的获取文本函数 """
-        view_ls = self.driver.app_elements_text(self.view, wait)  # 这里一般不会报错，拿文本。
-        if view_ls:
-            return view_ls
 
     def report_err(self):
         view_ls = self.get_text()
@@ -580,9 +576,6 @@ class SpeedPicker:
             # self.press_ok()  # 应对随时弹出来的需要协助，提示框。
             try:
                 view_ls = self.get_text(wait=15)  # 当前页面文本信息。
-                if not view_ls:  # 空的，就下一个流程了。
-                    logger.debug("抓文本函数，返回了一个空列表。")
-                    continue
                 ls = ''.join(view_ls)  # 这个是长文本。用来做一些特殊判断。
             except:
                 continue
