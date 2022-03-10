@@ -74,7 +74,7 @@ class BluePrint():
     def search_order_by_id(self, id='luoxiaobo', sitename=" sz-sqa-test "):
         """ 根据订单ID查询订单"""
         self.enter_site(sitename)
-        input_element = self.driver.find_elements((By.XPATH, '//span[@class="ant-form-item-children"]/input'),wait=5)
+        input_element = self.driver.find_elements((By.XPATH, '//span[@class="ant-form-item-children"]/input'), wait=5)
         input_element[0].send_keys(id)
         self.driver.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))  # 切换语言可能会出问题。不建议写按钮的名称
 
@@ -100,11 +100,10 @@ class BluePrint():
         self.driver.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))  # 切换语言可能会出问题。不建议写按钮的名称
 
     def search_order_by_status(self, status=""):
-
-
+        pass
 
     def check_config(self):
-        self.driver.open_url(self.url+'?showConfig=1')
+        self.driver.open_url(self.url + '?showConfig=1')
         self.login()
         self.enter_site()
         if len() == 5:
