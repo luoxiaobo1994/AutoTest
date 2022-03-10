@@ -13,13 +13,18 @@ def newway():
     model_ls = os.popen('pip list -o').readlines()  # 这样才能拿到命令行的返回值.
     # 第一行是名称,第二行是分割线
     up_list = [i.split()[0] for i in model_ls[2:]]  # 库信息的排布:'numpy  旧版本 新版本 xx' 按空格分割拿到包名就好
+    try:
+        up_list.remove('pip')  # 尽量不要更新pip，老容易出问题。 自己手动更新为好。
+    except:
+        pass
     print(f"可升级的库有:{up_list}")
     for item in up_list:
-        try:
-            print('-' * 50, f'开始升级库:{item}', sep='\n')
-            os.system(f"pip install --upgrade {item}")
-        except:
-            print(f"升级错误:{item}")
+        if '\\' not in item:
+            try:
+                print('-' * 50, f'开始升级库:{item}', sep='\n')
+                os.system(f"pip install --upgrade {item}")
+            except:
+                print(f"升级错误:{item}")
 
 
 if __name__ == '__main__':
