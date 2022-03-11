@@ -155,10 +155,15 @@ class SpeedPicker:
         count = num
         while count > 0:
             try:
-                self.driver.click_element((By.XPATH, '//*[contains(@text,"确定")]'), wait=timeout)  # Not too long。
+                self.driver.click_element((By.XPATH, '//*[@text="确定"]'), wait=timeout)
                 break
             except:
                 count -= 1
+            try:
+                self.driver.click_element((By.XPATH, '//*[@text="完成"]'), wait=timeout)
+                break
+            except:
+                break
 
     def input_error(self, code):
         # Used to verify the input error barcode. The premise of execution is that the input box pops up.
@@ -256,7 +261,7 @@ class SpeedPicker:
             except:
                 count -= 1
                 sleep(1)
-        if err_type == '载具合适':
+        if err_type == '载具不合适':
             count = 20
             while count > 0:
                 try:
@@ -265,16 +270,7 @@ class SpeedPicker:
                     break
                 except:
                     count -= 1
-
-    def report_full(self):
-        # 上报载物箱已满,前提是:Total_Picking.在拣货界面.
-        view_ls = self.get_text()
-        if '载物箱已满?' in view_ls:
-            if self.random_trigger(n=1500):
-                self.click_view_text("载物箱已满?")
-                self.driver.click_one(self.driver.find_elements(self.view)[-1])
-        else:
-            logger.info('没有载物箱已满上报的按钮.')
+                    sleep(1)
 
     def wait_moment(self, text, timeout=1, i=True, without=None):
         # 持续去抓某个文本，直到这个文本不再这个页面了。说明流程变了。
@@ -320,66 +316,20 @@ class SpeedPicker:
 
     def click_view_text(self, text, wait=1, count=3):
         # 强点击,保证点到.
-        # logger.info(f"Ready to click：[{text}]")
         while count > 0:
             self.driver.click_element((By.XPATH, f'//*[@text="{text}"]'), wait=wait)
             tmp_text = self.get_text(wait=1)
             if text not in tmp_text:
-                logger.info(f"点击文本:[{text}]成功.")
+                logger.info(f"点击:[{text}]成功.")
                 break
             else:
                 count -= 1
 
-    def click_input(self):
-        # 用来强制点击输入的,免得有点不到的情况.
-        count = 5
-        while count > 0:
-            # # self.press_ok()  # 可能有弹窗干扰.
-            text = self.get_text(wait=3)
-            if "输入" in text:
-                try:
-                    self.driver.click_element((By.XPATH, '//*[@text="输入"]'))
-                    if "输入" not in text:
-                        logger.info("点击[输入]按钮成功.")
-                        break
-                except Exception as e:
-                    count -= 1  # 不要卡流程,也给个计数限制,目前观察,最多点个两三次,肯定能点到.
-                    logger.warning(f"点击[输入]按钮发生了一些异常:{e}.")
-                    sleep(1)
-            else:
-                break  # 没有输入按钮,就不要卡流程.
-
-    def get_total(self, view_ls):
-        # 获取拣货最大数量.
-        l = ''.join(view_ls)
-        if '输入' in view_ls:
-            for i in l.split('/'):
-                if i.endswith("拣货数量"):
-                    return i.split("拣货数量")[0]
-        elif len({'完成', '拣货中'} & set(view_ls)) == 2:
-            for i in l.split('/'):
-                if "完成" in i:
-                    return i.split("完成")[0]
-
-    def find_goods(self):
-        # 模拟找货的时间。本身性能也一般,就不要给那么长的等待时间了.
-        find_time = random.randint(1, 3)
-        for i in range(find_time):
-            try:
-                self.driver.context  # 抓个数据，避免连接挂掉了。
-            except:
-                pass
-            sleep(1)
-        logger.info(f"等待:{find_time}秒钟,模拟找货时间。")
-
-    def picking(self):
+    def picking(self, set_view):
         self.press_ok()
-        view_ls = self.get_text()
-        logger.info(f"机器人当前到达拣货点:{view_ls}")  # 需要记录一下进入拣货流程.
-        # 情况1.
+        view_ls = set_view
+        logger.info(f"SpeedPicker处于拣货流程,页面信息:{view_ls}")  # 需要记录一下进入拣货流程.
         if '输入' in view_ls:  # 1.还没扫码，有输入按钮。
-            if self.random_trigger(n=0):  # 默认不打开,设置为1为常开.
-                self.find_goods()  # 延时时间,到这里设置.
             logger.info("拣货情形1,还未扫码.")
             if self.random_trigger(n=50):  # 概率，上报异常。
                 self.report_err()
@@ -388,56 +338,18 @@ class SpeedPicker:
             # total = view_ls[-4]  # 单独的最大拣货数量。  从输入开始走,可以这么拿.
             if self.random_trigger(n=50):  # 随机触发,先去掉，100%触发。
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
-            good_code = view_ls[view_ls.index("请拣取正确货品并扫码") + 2]
+            good_code = view_ls[view_ls.index('拣货中') + 3]
             self.inputcode(code=good_code)  # 输入了商品码。
             self.driver.click_element((By.XPATH, '//*[@text="完成"]'))
             logger.debug(f"通过点击[完成],快速完成拣货.")
-            self.go_to()
-            # 下面这部分代码不要删除,旧功能
-            # if total == "1":
-            #     self.go_to()  # 一个商品,也要检查一下推荐点位.
-            #     return  # 只捡一个，扫码完成就齐活。
-            # elif total != '1' and total.isdigit():
-            #     logger.debug(f"准确获取到最大拣货数量:{total}")
-            #     self.input_max(total)  # 走这个流程,到这也结束了.不需要单独的return
-            # else:
-            #     logger.error(f"获取最大拣货数量错误,拿到的数据是:{total}")  # UI变了,或者人为操作,会到这.
+        elif '异常上报' not in view_ls:
+            # 拣货情形2,点开了输入框,但是没有输入商品码
+            self.inputcode(code='199103181516')
+            self.driver.click_element((By.XPATH, '//*[@text="完成"]'))
         else:
+            # 拣货情形3,都捡完了,只是没点完成.
             self.driver.click_element((By.XPATH, '//*[@text="完成"]'))
             logger.debug(f"通过点击[完成],快速完成拣货.")
-            # # ['载物箱已满?', '拣货中', '6923450659861', '第5个商品', '1/3', '完成', '异常上报']
-            # logger.info("拣货情形2.拣货未完成.")
-            # tmp_text = self.get_text()
-            # if '前往' in tmp_text:
-            #     return
-            # for i in tmp_text:
-            #     if '/' in i:
-            #         x = i.split('/')
-            #         logger.debug(f"拆分的数据:{x}")
-            #         if len(x) == 2 and x[0].isdigit() and x[1].isdigit():
-            #             max_num = x[1]
-            # logger.debug(f"最大拣货数量为:{max_num}")
-            # self.input_max(max_num)
-
-    def input_max(self, num):
-        logger.info("超过1个商品需要捡取,现在即将输入最大拣货数量.")
-        if self.random_trigger(n=300):  # 上报异常。
-            self.report_err()
-            return
-        count = 3
-        while count > 0:  # 避免死循环
-            tmp_text = self.get_text()
-            if '输入' in tmp_text:  # 当前点位还有其他商品需要捡取.
-                break
-            elif '前往' in tmp_text:  # 拣货完成,前往下一个目标点. 也该跳出循环.
-                break
-            else:
-                view = self.driver.find_elements(self.view)
-                for i in range(int(num)):  # 根据最大拣货数量点击.
-                    # print(f"点击第{i}次+")
-                    self.driver.click_one(view[-5])  # + 图标. 现在只能用这个土办法了.
-                count -= 1  # 避免原地死循环的计数
-        logger.info(f"输入最大数值[{num}]成功.")
         self.go_to()
 
     def check_time(self):
@@ -449,8 +361,7 @@ class SpeedPicker:
                 break
 
     def go_to(self):
-        self.check_time()  # 放在这里检查一下,页面是否正常退出了.
-        # 重构。
+        # self.check_time()  # 放在这里检查一下,页面是否正常退出了.
         logger.info("当前商品拣货完成,检查是否有推荐点.")
         count = 6
         while count > 0:
@@ -474,17 +385,15 @@ class SpeedPicker:
                 break
             else:
                 count -= 1
-                # sleep(0.5)
 
     def bind_carrier(self):
         # 绑定载物箱。
-        logger.info("绑定载物箱流程,请给机器人绑定载物箱.")
-        # self.press_ok()  # 可能超时了，先点击一下。
+        logger.info(f"绑定载物箱流程,请给机器人绑定载物箱.载物箱信息:{self.get_text()}")
         if self.random_trigger(n=100):  # 上报异常，就不用做了。
             self.report_err()
             return  # 确保流程跳出去。
         if '输入' in self.get_text():
-            self.click_input()
+            self.click_view_text("输入")
         while True:
             # self.press_ok()
             tmp_text = ''.join(self.get_text()).replace(' ', '')
@@ -492,8 +401,7 @@ class SpeedPicker:
                 self.inputcode(code=str(random.randint(1, 9999999999999)))
                 sleep(1)  # 绑定单个的时候,抓太快了,会重复输一下,此时页面换了,就没有输入框了.给个延时.
                 try:
-                    self.click_view_text("完成")
-                    # self.bind_fish()
+                    self.click_view_text("确定", wait=2)
                     break  # 绑定完成了  
                 except:
                     pass
@@ -501,11 +409,6 @@ class SpeedPicker:
                 break  # 输入框消失了,也算完活.不要一直卡着.
             else:
                 break
-
-    def bind_fish(self):
-        from utils.connect_linux import ssh
-        logger.debug("执行脚本,添加金龙鱼载具信息.")
-        ssh(ip='10.2.9.181', cmds=['python3 lxb/storage.py'])
 
     def other_situation(self):
         # 开另一个线程来检测是否发生异常.持续检测的线程,就不要经常刷新日志了.
@@ -550,45 +453,19 @@ class SpeedPicker:
                 logger.info("发生了一些奇怪的异常,可能需要你自己去检查一下了.")
                 exit(-500)
 
-    def debug_check(self):
-        # 调试脚本效率的,与SP无关.
-        while True:
-            sleep(1)
-            # try:
-            print(f"{get_time()} view文本:{self.driver.app_elements_text(self.view)}")
-            # except:
-            #     print("?????")
-            print(f"view_content:{self.driver.app_elements_content_desc(self.view)}")
-            print(f"image_content:{self.driver.app_elements_content_desc(self.image)}")
-            image_ico = self.driver.find_elements(self.image)
-            for i in self.driver.app_elements_content_desc(self.view):
-                if "SkillSpace" in i:
-                    ico_name = i.split('\n')
-                    self.driver.click_one(image_ico[-(len(ico_name) - ico_name.index('SpeedPicker'))])
-                    print(f"{get_time()} 点击SpeedPicker")
-            try:
-                self.click_view_text("退出", wait=60)
-                sleep(1)  #
-            except:
-                pass
-
     def main(self):
         """主业务流程，通过不断的抓取页面信息。去确定当前SpeedPicker运行状态"""
         self.open_sp()
-        # self.bind_fish()
         while True:
             # self.press_ok()  # 应对随时弹出来的需要协助，提示框。
             try:
                 view_ls = self.get_text(wait=15)  # 当前页面文本信息。
-                if not view_ls:  # 空的，就下一个流程了。
-                    logger.debug("抓文本函数，返回了一个空列表。")
-                    continue
                 ls = ''.join(view_ls)  # 这个是长文本。用来做一些特殊判断。
             except:
                 continue
-            use_text = {'等待任务中', '绑定载物箱', '载物箱已满?', '前往', '请扫描载物箱码或任意格口码', '已取下', '拣货异常', '拣货中', '异常上报', '输入', '暂停',
-                        '恢复', '请取下载物箱 或 卸载载具上的货物', '打包'}
-            if self.random_trigger(n=30):
+            use_text = {'等待任务中', '前往', '拣货异常', '拣货中', '异常上报', '输入', '暂停', '恢复', '拣货执行结果', '隔口名称'}
+            set_view = set(view_ls)
+            if self.random_trigger(n=60):
                 logger.debug(f"主流程调试日志：{view_ls}")  # 调试打印的，后面不用了
             elif len(use_text & set(view_ls)) == 0:
                 logger.warning(f"页面获取的文本与SP不符。\n现在拿到的是:{view_ls}")
@@ -606,13 +483,21 @@ class SpeedPicker:
                 if self.random_trigger(n=300000):  # 触发随机。
                     self.pause_move()  # 暂停移动。
                 self.wait_moment("前往")
-            elif any_one(['请扫描载物箱码或任意格口码', "绑定载物箱", '扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
+            elif any_one(['扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
                 self.bind_carrier()
-            elif len({'拣货中', '请拣取正确货品并扫码', '完成', '异常上报', '拣货数量/需拣数量', '载物箱已满?', '拣货数量'} & set(view_ls)) > 2:
+            elif len(set_view.difference(use_text)) >= 4:  # {'拣货中', '完成', '异常上报', '输入', '×'}
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
-                self.picking()  # 封装成函数，单独处理。
+                self.picking(set_view)  # 封装成函数，单独处理。
+            elif '拣货执行结果' in ls[:10]:
+                logger.debug(f"拣货结果:{self.get_text()}")
+                self.press_ok()
+                # 异常处理区,或者订单异常终止,都是这个流程,无需重复点.
+                self.click_view_text("已取下")  # 强点.
+                logger.info("完成一单,不错!")
+                logger.info('~*' * 25 + '\n')
+                self.wait_moment('已取下')
             elif '已取下' in ls:
-                logger.debug(f"波次信息:{self.get_text()[-2]}")
+                # logger.debug(f"波次信息:{self.get_text()[-2]}")
                 self.press_ok()  # 确定波次.
                 # 异常处理区,或者订单异常终止,都是这个流程,无需重复点.
                 self.click_view_text("已取下")  # 强点.
@@ -646,7 +531,7 @@ class SpeedPicker:
                 logger.error("机器人丢失定位了。")
                 break  # 跑不动了。
             else:
-                pass
+                logger.debug("main主函数里,最后一个else.为什么会走到这一步?")
 
 
 if __name__ == '__main__':
@@ -654,11 +539,9 @@ if __name__ == '__main__':
         try:
             sp = SpeedPicker()
             sp.main()
-            # sp.debug_check()
         except KeyboardInterrupt:
             logger.info("手动停止脚本.")
-            reset_keyboard(SpeedPicker().device_num()[0])  # reset keyboard
-            break
+            reset_keyboard(SpeedPicker().device_num()[0])  # 重置键盘.
         except Exception as e:
             timeout = 10
             logger.error(
