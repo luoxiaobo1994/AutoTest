@@ -325,9 +325,9 @@ class SpeedPicker:
             else:
                 count -= 1
 
-    def picking(self, set_view):
+    def picking(self):
         self.press_ok()
-        view_ls = set_view
+        view_ls = self.get_text()
         logger.info(f"SpeedPicker处于拣货流程,页面信息:{view_ls}")  # 需要记录一下进入拣货流程.
         if '输入' in view_ls:  # 1.还没扫码，有输入按钮。
             logger.info("拣货情形1,还未扫码.")
@@ -370,7 +370,7 @@ class SpeedPicker:
             except:
                 continue
             if "请到此处附近" in before:
-                logger.debug(f"拿到推荐点位了,但是数据异常:{before}")
+                logger.debug(f"拿到推荐点位了:{before}")
                 try:
                     logger.info(f"抓取到推荐点位--->{before[before.index('请到此处附近') + 1]}")
                     break
@@ -380,8 +380,9 @@ class SpeedPicker:
             elif '打包绑定区' in before:
                 logger.info("拣货任务完成,已无商品需要拣货.")
                 break
-            elif '拣货中' in before and '请拣取正确货品并扫码' in before:
+            elif '拣货中' in before and '输入' in before:
                 logger.info("当前拣货点,仍有商品需要拣货.")
+                self.picking()  # 既然还要拣货,就直接捡.
                 break
             else:
                 count -= 1
@@ -389,7 +390,7 @@ class SpeedPicker:
     def bind_carrier(self):
         # 绑定载物箱。
         logger.info(f"绑定载物箱流程,请给机器人绑定载物箱.载物箱信息:{self.get_text()}")
-        if self.random_trigger(n=100):  # 上报异常，就不用做了。
+        if self.random_trigger(n=0):  # 上报异常，就不用做了。
             self.report_err()
             return  # 确保流程跳出去。
         if '输入' in self.get_text():
@@ -460,6 +461,7 @@ class SpeedPicker:
             # self.press_ok()  # 应对随时弹出来的需要协助，提示框。
             try:
                 view_ls = self.get_text(wait=15)  # 当前页面文本信息。
+                # logger.debug(f"view_ls:{view_ls}")
                 ls = ''.join(view_ls)  # 这个是长文本。用来做一些特殊判断。
             except:
                 continue
@@ -485,9 +487,9 @@ class SpeedPicker:
                 self.wait_moment("前往")
             elif any_one(['扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
                 self.bind_carrier()
-            elif len(set_view.difference(use_text)) >= 4:  # {'拣货中', '完成', '异常上报', '输入', '×'}
+            elif view_ls[0] == '拣货中' and len(set_view.difference(use_text)) >= 4:  # {'拣货中', '完成', '异常上报', '输入', '×'}
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
-                self.picking(set_view)  # 封装成函数，单独处理。
+                self.picking()  # 封装成函数，单独处理。
             elif '拣货执行结果' in ls[:10]:
                 logger.debug(f"拣货结果:{self.get_text()}")
                 self.press_ok()
@@ -496,7 +498,7 @@ class SpeedPicker:
                 logger.info("完成一单,不错!")
                 logger.info('~*' * 25 + '\n')
                 self.wait_moment('已取下')
-            elif '已取下' in ls:
+            elif '已取下' in ls and '打包' in ls:
                 # logger.debug(f"波次信息:{self.get_text()[-2]}")
                 self.press_ok()  # 确定波次.
                 # 异常处理区,或者订单异常终止,都是这个流程,无需重复点.
