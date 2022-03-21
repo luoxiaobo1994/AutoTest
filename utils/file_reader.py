@@ -83,6 +83,3 @@ if __name__ == '__main__':
     reader = YamlReader(y)
     print(reader.data[0])
 
-    # e = "D:/py_projects/Test_framework/data/baidu.xlsx"
-    # reader = ExcelReader(e,title_line=True)
-    # print(reader.data)

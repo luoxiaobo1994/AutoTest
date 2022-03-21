@@ -44,7 +44,7 @@ def bubbleSort(arg):
     count = 0  # 统计交换次数
     while flag:
         for i in range(num):
-            for j in range(0, num - i - 1):  # 自己前面的就不用排了,到你这,前面都排好了.
+            for j in range(num - i - 1):  # 自己前面的就不用排了,到你这,前面都排好了.
                 if arg[j] > arg[j + 1]:  # 比较
                     arg[j], arg[j + 1] = arg[j + 1], arg[j]  # 交换
                     count += 1  # 交换,次数加1
@@ -63,5 +63,6 @@ def moretest(n,func):
 
 
 if __name__ == '__main__':
-    ls = random.sample(range(100),20)
+    ls = random.sample(range(100),10)
+    print(f"交换前的序列：{ls}")
     bubbleSort(ls)

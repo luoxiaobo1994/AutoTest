@@ -264,7 +264,7 @@ class TestKey:
     # 关闭脚本
     def quit(self, time_out=5):
         for i in range(time_out):
-            print("脚本执行完毕,{}s后即将关闭浏览器...".format(time_out - i))
+            print(f"脚本执行完毕,{time_out - i}s后即将关闭浏览器...")
             sleep(1)
         self.driver.quit()
 

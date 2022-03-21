@@ -74,52 +74,66 @@ class BluePrint():
     def search_order_by_id(self, id='luoxiaobo', sitename=" sz-sqa-test "):
         """ 根据订单ID查询订单"""
         self.enter_site(sitename)
-        input_element = self.driver.find_elements((By.XPATH, '//span[@class="ant-form-item-children"]/input'), wait=5)
-        input_element[0].send_keys(id)
+        input_element = self.driver.find_elements((By.XPATH, '//label[@title="Order ID"]/../..//input'), wait=5)
+        input_element.send_keys(id)
         self.driver.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))  # 切换语言可能会出问题。不建议写按钮的名称
 
     def search_order_by_batch(self, id='luoxiaobo', sitename=" sz-sqa-test "):
         """ 根据波次ID查询订单"""
         self.enter_site(sitename)
-        input_element = self.driver.find_elements((By.XPATH, '//span[@class="ant-form-item-children"]/input'), wait=5)
-        input_element[1].send_keys(id)
+        input_element = self.driver.find_elements((By.XPATH, '//label[@title="Batch ID"]/../..//input'), wait=5)
+        input_element.send_keys(id)
         self.driver.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))  # 切换语言可能会出问题。不建议写按钮的名称
 
     def search_order_by_tote(self, id='199103181516', sitename=" sz-sqa-test "):
         """ 根据载物箱码查询订单"""
         self.enter_site(sitename)
-        input_element = self.driver.find_elements((By.XPATH, '//span[@class="ant-form-item-children"]/input'), wait=5)
-        input_element[2].send_keys(id)
+        input_element = self.driver.find_elements((By.XPATH, '//label[@title="Tote Code"]/../..//input'), wait=5)
+        input_element.send_keys(id)
         self.driver.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))  # 切换语言可能会出问题。不建议写按钮的名称
 
     def search_order_by_slot(self, id='luoxiaobo', sitename=" sz-sqa-test "):
         """ 根据Slot码查询订单"""
         self.enter_site(sitename)
-        input_element = self.driver.find_elements((By.XPATH, '//span[@class="ant-form-item-children"]/input'), wait=5)
-        input_element[3].send_keys(id)
+        input_element = self.driver.find_elements((By.XPATH, '//label[@title="Slot Code"]/../..//input'), wait=5)
+        input_element.send_keys(id)
         self.driver.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))  # 切换语言可能会出问题。不建议写按钮的名称
 
-    def search_order_by_status(self, status=""):
-        pass
+    def search_order_by_status(self, status="Executing"):
+        self.driver.click_element((By.XPATH, '//label[@title="Order Status"]/../..//i'), wait=5)
+        self.driver.click_element((By.XPATH, f'//li[@role="option" and text()="{status}"]'))  # 弹窗后可点。
+        self.driver.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))
+
+    def search_order_by_business(self, status="Total picking"):  # picking可能会换为Picking
+        self.driver.click_element((By.XPATH, '//label[@title="Business Process"]/../..//i'), wait=5)
+        self.driver.click_element((By.XPATH, f'//li[@role="option" and text()="{status}"]'))  # 弹窗后可点。
+        self.driver.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))
 
     def check_config(self):
         self.driver.open_url(self.url + '?showConfig=1')
         self.login()
         self.enter_site()
-        if len() == 5:
+        options = self.driver.find_elements((By.XPATH, '//div[@role="tab"]'))
+        if len(options) == 5:
             logger.debug(f"检查配置成功，链接拼接配置之后，配置入口可见。")
             return
-        logger.warning("检查一下，还是只有4个菜单按钮。")
+        logger.warning("检查一下，还是只有4个菜单选项")
 
-    def quit(self):
+    def change_language(self, language="English"):
+        """ 切换语言 """
+        self.driver.click_element((By.XPATH, '//a[starts-with(@class,"ant")]'))  # 整个页面只有一个a标签，只是为了避免以后有不一样的
+        self.driver.click_element((By.XPATH, f'//li/a[contains(text(),"{language}")]'))
+
+    def quit(self, timeout=3):
         # 临时的退出浏览器函数，后面用例化之后要去除。
-        self.driver.quit()
+        self.driver.quit(timeout)
 
 
 if __name__ == '__main__':
     bp = BluePrint()
     bp.open_blueprint()
     bp.login()
-    bp.order_list()
-    bp.search_order_by_batch()
+    bp.change_language()
+    bp.enter_site()
+    bp.search_order_by_status()
     bp.quit()
