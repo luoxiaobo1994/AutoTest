@@ -4,11 +4,8 @@
 
 
 import random
-
-list_1 = [89, 89, 62, 75, 62, 26, 75, 131, 75, 75, 62, 131, 26, 95, 95, 131, 62, 89, 89]
-for i in list_1:
-    # print(i)
-    # print(list_1.count(i))
-    if list_1.count(i)%2==1:
-        print(i)
-        break
+import string
+ls = string.ascii_letters + string.digits + '~!@#$%^&*() '
+print(len(ls))
+ll = random.sample(ls,random.choice(range(0,63)))
+print(''.join(ll))

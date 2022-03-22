@@ -239,6 +239,11 @@ def any_one(list_a, list_b):
         return False
 
 
+def random_string(num=10):
+    ls = string.ascii_letters + string.digits + '~!@#$%^&*() '
+    return ''.join(random.sample(ls, random.choice(range(1, num))))
+
+
 class just_err(Exception):
 
     def __init__(self):

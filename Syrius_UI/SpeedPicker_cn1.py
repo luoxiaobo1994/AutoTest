@@ -125,6 +125,7 @@ class SpeedPicker:
         if n == 0:  # 设置为0，关闭随机事件。
             return 0
         elif n == 1:  # 设置为1，必中事件。
+            logger.debug(f"当前所上报的异常流程,被设置为常开.注意使用.")
             return 1
         elif n >= 2:
             num = random.randint(2, n + 2)  # 1和0被排除，得多加两个。
@@ -150,7 +151,7 @@ class SpeedPicker:
                 logger.info("恢复按钮消失了,可能是人为点击了.")
                 return
 
-    def press_ok(self, num=1, timeout=0.1):
+    def press_ok(self, num=2, timeout=0.1):
         # 点击确定按钮
         count = num
         while count > 0:
@@ -163,6 +164,7 @@ class SpeedPicker:
                 self.driver.click_element((By.XPATH, '//*[@text="完成"]'), wait=timeout)
                 break
             except:
+                count -= 1
                 break
 
     def input_error(self, code):
@@ -215,26 +217,29 @@ class SpeedPicker:
         if view_ls:
             return view_ls
 
-    def report_err(self):
+    def report_err(self, err=''):
         view_ls = self.get_text()
         if view_ls[0] == '异常上报':
             logger.info("当前在异常上报流程.")
-            self.do_err()
+            self.do_err(err)
         else:
             try:
                 self.driver.click_element((By.XPATH, '//*[@text="异常上报"]'), wait=3, raise_except=True)
                 # self.click_view_text("异常上报")  # 不能这么做,点进去了,异常上报还是在文本中.
-                self.do_err()
+                self.do_err(err)
             except:
                 logger.warning("异常上报流程,点击上报按钮出现了一些问题.")
                 return
 
-    def do_err(self):
+    def do_err(self, err=''):
         # 上报异常的冗余函数.
         tmp_text = self.get_text()
         if tmp_text[0] != '异常上报':
-            logger.warning(
-                "当前在异常上报流程,但是不在异常上报界面了.去检查一下.")
+            logger.warning("当前在异常上报流程,但是不在异常上报界面了.去检查一下.")
+            return
+        if err:
+            self.driver.click_one(self.driver.find_element((By.XPATH, f'//android.view.View[@text="{err}"]')))
+            self.press_ok(timeout=2)  #
             return
         view_ls = tmp_text[1:]
         err_type = random.choice(view_ls)
@@ -361,7 +366,8 @@ class SpeedPicker:
                 break
 
     def go_to(self):
-        # self.check_time()  # 放在这里检查一下,页面是否正常退出了.
+        self.check_time()  # 放在这里检查一下,页面是否正常退出了.
+        self.press_ok()  # 和倒计时功能不能共存,会主动点掉. 当然,要是倒计时点不掉,也能发现新BUG.
         logger.info("当前商品拣货完成,检查是否有推荐点.")
         count = 6
         while count > 0:
@@ -380,7 +386,9 @@ class SpeedPicker:
             elif '打包绑定区' in before:
                 logger.info("拣货任务完成,已无商品需要拣货.")
                 break
-            elif '拣货中' in before and '输入' in before:
+            elif '前往' in before:
+                break
+            elif ainb(['输入', '异常上报'], before):
                 logger.info("当前拣货点,仍有商品需要拣货.")
                 self.picking()  # 既然还要拣货,就直接捡.
                 break
@@ -391,7 +399,7 @@ class SpeedPicker:
         # 绑定载物箱。
         logger.info(f"绑定载物箱流程,请给机器人绑定载物箱.载物箱信息:{self.get_text()}")
         if self.random_trigger(n=0):  # 上报异常，就不用做了。
-            self.report_err()
+            self.report_err('载具不合适')
             return  # 确保流程跳出去。
         if '输入' in self.get_text():
             self.click_view_text("输入")
@@ -399,7 +407,7 @@ class SpeedPicker:
             # self.press_ok()
             tmp_text = ''.join(self.get_text()).replace(' ', '')
             if '绑定载物箱' in tmp_text:
-                self.inputcode(code=str(random.randint(1, 9999999999999)))
+                self.inputcode(random_string(64))  # 1-64个长度的随机字符串.
                 sleep(1)  # 绑定单个的时候,抓太快了,会重复输一下,此时页面换了,就没有输入框了.给个延时.
                 try:
                     self.click_view_text("确定", wait=2)
@@ -458,7 +466,7 @@ class SpeedPicker:
         """主业务流程，通过不断的抓取页面信息。去确定当前SpeedPicker运行状态"""
         self.open_sp()
         while True:
-            # self.press_ok()  # 应对随时弹出来的需要协助，提示框。
+            # self.press_ok()  # 应对随时弹出来的需要协助，提示框。有必要保留,可能点掉绑定载具的"完成"
             try:
                 view_ls = self.get_text(wait=15)  # 当前页面文本信息。
                 # logger.debug(f"view_ls:{view_ls}")
@@ -533,6 +541,7 @@ class SpeedPicker:
                 logger.error("机器人丢失定位了。")
                 break  # 跑不动了。
             else:
+                self.press_ok()  # 这里来点一下
                 logger.debug("main主函数里,最后一个else.为什么会走到这一步?")
 
 
