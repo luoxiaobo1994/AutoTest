@@ -202,6 +202,7 @@ def more_device():
 
 
 def ainb(a, b):
+    # a是b的子集.
     tmp = list(set(a) & set(b))
     if tmp.sort() == a.sort():
         return True

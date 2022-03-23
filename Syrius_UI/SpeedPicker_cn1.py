@@ -362,6 +362,9 @@ class SpeedPicker:
             temp_text = self.get_text()
             if "确定" in ''.join(temp_text):
                 logger.debug(f"倒计时功能检查:{temp_text}")
+            elif '重试' in temp_text:
+                self.click_view_text('重试')
+                break
             else:
                 break
 
@@ -388,7 +391,7 @@ class SpeedPicker:
                 break
             elif '前往' in before:
                 break
-            elif ainb(['输入', '异常上报'], before):
+            elif '输入' in before and before[-1] == '输入':  # 有输入,就是要拣货.
                 logger.info("当前拣货点,仍有商品需要拣货.")
                 self.picking()  # 既然还要拣货,就直接捡.
                 break
