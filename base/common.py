@@ -245,6 +245,11 @@ def random_string(num=10):
     return ''.join(random.sample(ls, random.choice(range(1, num))))
 
 
+def alpha_digit(num=10):
+    ls = string.ascii_letters + string.digits
+    return ''.join(random.sample(ls, random.choice(range(1, num))))
+
+
 class just_err(Exception):
 
     def __init__(self):
@@ -252,6 +257,4 @@ class just_err(Exception):
 
 
 if __name__ == '__main__':
-    devices = get_devices()
-    for i in devices:
-        print(get_android_version(i))
+    print(alpha_digit(20))

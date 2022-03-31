@@ -47,7 +47,7 @@ class create_order():
         for id in range(start, start + num):  # 不同的ID号个数.
             for count in range(same_id):  # 一个相同ID号,有多少个.
                 # 得新生成数据,不然就是same_id个相同的商品数据了.  有新增字段,这里也要对应新增函数.
-                x = (id, self.batch_id(id),
+                x = (id, self.alpha_digit(),  # 波次ID，用数字字母组成
                      self.business_type(),
                      self.business_process(pick_type),  # 拣货类型,传入索引.1=Total,2=Order
                      self.priority(),
@@ -55,6 +55,7 @@ class create_order():
                      self.item_name(),  # 商品名称
                      self.item_code(code_len),  # 商品码
                      self.item_link(),  # 商品图片链接
+                     # self.net_link(),
                      self.item_count(count_range),  # 拣货数量,1~参数值.比如1~30 之间的随机数值.
                      self.binlocation(binlocations),  # 货架位置
                      self.sequential_execution())  # 是否顺序下单
@@ -69,6 +70,10 @@ class create_order():
 
     def batch_id(self, num=1):
         return num
+
+    def alpha_digit(self,num=30):
+        ls = string.ascii_letters + string.digits
+        return ''.join(random.sample(ls, random.choice(range(1, num))))
 
     def business_type(self, pick_type="Picking"):
         return pick_type
@@ -120,6 +125,7 @@ class create_order():
 
     def item_link(self):
         # 你要使用的商品图片链接.从下面的这些数据随机取一个.拼接成完整路径.
+        # 百度图片:https://www.baidu.com/img/PCfb_5bf082d29588c07f842ccde3f97243ea.png
         link_list = ['4549395350520.png', '4902777079851.jpg', '4909384486567.png', '4923743543567.jpg',
                      '4942355137139.png', '4571157254333.jpg', '4903301519393.png', '4909411069421.png',
                      '4923743892375.jpg', '6911986345668.png', '4901330502881.png', '4905677849329.jpg',
@@ -161,9 +167,9 @@ class create_order():
 if __name__ == '__main__':
     ci = create_order()
     ci.order_id(
-        pick_type=2,  # 订单类型.1=Total,2=Order
-        num=30,  # 多少个不同的订单ID.
-        same_id=1,  # 一个ID号要几个商品
+        pick_type=1,  # 订单类型.1=Total,2=Order
+        num=60,  # 多少个不同的订单ID.
+        same_id=2,  # 一个ID号要几个商品
         container_num=1,  # 载物箱索引,1=1A,2=3A,3=6A,4=9A
         count_range=10,  # 拣货数量的随机范围1~这个值.
         code_len=15,  # 商品码长度

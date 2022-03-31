@@ -15,9 +15,11 @@ Jarvis图标,通知图标：android.widget.ImageView[@content-desc="机器人定
 """
 """
 桌面图标：android.widget.ImageView，索引很多，电池图标，公司logo,小程序图标.
+
+
 skillspace内信息：
 每个小程序的词条：android.widget.RelativeLayout
-小程序的名称，打开/下载/更新文本：android.widget.TextView，
+小程序的名称，打开/下载/更新 文本：android.widget.TextView，
 层级关系：
     - android.widget.RelativeLayout  # 词条
         - 小程序名称。  android.widget.TextView[@text="SpeedPicker"]

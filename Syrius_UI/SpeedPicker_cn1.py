@@ -77,20 +77,25 @@ class SpeedPicker:
                                 if item in new_text and '退出' in new_text:
                                     logger.warning(f"发生了一些异常,SpeedPicker不能正常启动:{new_text}")
                                     exit(-404)
-                        # self.wait_moment("version:") 这是部分文本.  # 'version:1.5.730'
-                        break
+                        # 想办法在启动的时候,走一下更新流程.
+                        if self.driver.element_display((By.XPATH, '//*[starts-with(@text,"更新")]')):
+                            break
                 else:
                     logger.warning(f"这个设备{self.device_num()[0]}还没有安装SpeedPicker, 请先安装.")
         except:
             return
+
+    def update_sp(self):
+        self.driver.click_element((By.XPATH, '//*[starts-with(@text,"更新")]'))  # 点击更新,应该跳转skillspace里
+        self.driver.click_element((By.XPATH, '//*[@*="更新"]'))
+        self.driver.click_element((By.XPATH, '//*[@*="打开"]'), wait=30)  # 下载时间有点长.
 
     def err_notify(self):
         try:
             notify = self.driver.app_elements_content_desc(self.image, wait=1)  # 不用抓太久.
             if notify:
                 for i in notify:
-                    # The number of notifications in the upper right corner is also the image class So do a screening
-                    if len(i) > 3 and '机器人' in i:
+                    if (len(i) > 3 and '机器人' in i) or (len(i) > 3 and '平板' in i):
                         logger.info(f"这个设备发生了一些异常:[{i}] ,请先恢复异常.")
                         return 1
             else:
@@ -192,12 +197,13 @@ class SpeedPicker:
                         except:
                             pass  # The function needs to be improved
                         logger.info("当前页面没抓到文本,如果持续刷新这个日志,请前往检查一下.")
-                        sleep(10)  # 这里也要睡眠一下，避免刷日志太快了。
+                        self.is_other_page()  # 检查一下,是否退出了SP界面.
                         return  # 跳出去
             except TypeError:
+                logger.debug("抓取文本发生类型错误异常,检查是否退出SP界面了.")
+                self.is_other_page()
                 if self.random_trigger(n=60):
-                    logger.debug(
-                        f"随机刷日志, 脚本仍然在抓取文本中,当前可能拿到了一些不符合要求的:{view_ls}")
+                    logger.debug(f"随机刷日志, 脚本仍然在抓取文本中,当前可能拿到了一些不符合要求的:{view_ls}")
                     sleep(10)
                     break  # 尝试退出一下,因为总会重复刷这个日志.
                 if raise_except:
@@ -211,11 +217,32 @@ class SpeedPicker:
             sleep(10)  # 这里也要睡眠一下，避免刷日志太快了。
             return  # 跳出去
 
-    def get_text22(self, wait=3):
-        """ 新的获取文本函数 """
-        view_ls = self.driver.app_elements_text(self.view, wait)  # 这里一般不会报错，拿文本。
-        if view_ls:
-            return view_ls
+    def is_other_page(self):
+        if self.driver.element_display((By.XPATH, '//*[contains(content-desc,"配置信息")]')):
+            logger.info("机器人正在同步配置信息,请稍后...")
+            sleep(10)
+        elif self.driver.element_display((By.XPATH, '//*[starts-with(@text,"/sdcard/log/")]')):
+            logger.info("机器人正在收集GoGoReady日志,请稍等...")
+            while True:
+                if self.driver.element_display((By.XPATH, '//*[starts-with(@text,"/sdcard/log/")]')):
+                    sleep(3)
+                else:
+                    break
+            sleep(10)
+        elif self.driver.element_display((By.XPATH, '//*[contains(@content-desc,"上传机器人日志")]')):
+            logger.info("正在上传机器人日志,请稍后...")
+            # self.wait_moment("上传机器人日志")
+            sleep(20)
+            if self.driver.element_display((By.XPATH, '//*[contains(@content-desc,"日志上传完成")]')):
+                logger.debug("机器人日志已上传完成,请自行前往解决异常,恢复机器人移动.")
+                exit(100)
+        elif self.driver.element_display((By.XPATH, '//*[contains(@content-desc,"SkillSpace")]')):
+            logger.info("机器人在Javis Launcher主界面,尝试重新打开SpeedPicker.")
+            if self.err_notify():
+                return
+            self.open_sp()
+        else:
+            sleep(5)
 
     def report_err(self, err=''):
         view_ls = self.get_text()
@@ -304,11 +331,10 @@ class SpeedPicker:
                                 f"当前页面超过{minutes}分钟没有变化了, 请检查是否发生了什么异常情况.")
                             self.err_notify()
                             break  # 出问题了，也跳出流程，等着回来吧。
-
                     else:
                         break  # 抓不到重复的文本了。跳出循环。
                 else:
-                    if self.random_trigger(n=1):
+                    if self.random_trigger(n=60):
                         logger.info(f"获取到了None文本,为什么?")
                     err -= 1  # 这种情况,也给他跳出循环.
                     sleep(timeout)
@@ -343,7 +369,7 @@ class SpeedPicker:
             # total = view_ls[-4]  # 单独的最大拣货数量。  从输入开始走,可以这么拿.
             if self.random_trigger(n=50):  # 随机触发,先去掉，100%触发。
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
-            good_code = view_ls[view_ls.index('拣货中') + 3]
+            good_code = view_ls[view_ls.index('UPC:') + 1]
             self.inputcode(code=good_code)  # 输入了商品码。
             self.driver.click_element((By.XPATH, '//*[@text="完成"]'))
             logger.debug(f"通过点击[完成],快速完成拣货.")
@@ -354,7 +380,7 @@ class SpeedPicker:
         else:
             # 拣货情形3,都捡完了,只是没点完成.
             self.driver.click_element((By.XPATH, '//*[@text="完成"]'))
-            logger.debug(f"通过点击[完成],快速完成拣货.")
+            logger.debug(f"情形3，通过点击[完成],快速完成拣货.")
         self.go_to()
 
     def check_time(self):
@@ -476,7 +502,8 @@ class SpeedPicker:
                 ls = ''.join(view_ls)  # 这个是长文本。用来做一些特殊判断。
             except:
                 continue
-            use_text = {'等待任务中', '前往', '拣货异常', '拣货中', '异常上报', '输入', '暂停', '恢复', '拣货执行结果', '隔口名称'}
+            use_text = {'等待任务中', '前往', '拣货异常', '拣货中', '异常上报', '输入', '暂停', '恢复', '拣货执行结果', '隔口名称', '任务被终止', '请取下载物箱或货品',
+                        '已取下'}
             set_view = set(view_ls)
             if self.random_trigger(n=60):
                 logger.debug(f"主流程调试日志：{view_ls}")  # 调试打印的，后面不用了
@@ -545,7 +572,7 @@ class SpeedPicker:
                 break  # 跑不动了。
             else:
                 self.press_ok()  # 这里来点一下
-                logger.debug("main主函数里,最后一个else.为什么会走到这一步?")
+                logger.debug(f"main主函数里,最后一个else.为什么会走到这一步? 此时的界面文本:{self.get_text()}")
 
 
 if __name__ == '__main__':
