@@ -356,9 +356,15 @@ class SpeedPicker:
             else:
                 count -= 1
 
-    def picking(self):
+    def picking(self, target=''):
+        if not target.startswith('A0'):
+            return  # 前往的目标点，不是货架区。说明不是拣货流程，直接跳出去。
         self.press_ok()
         view_ls = self.get_text()
+        if target in view_ls:
+            logger.debug(f"移动中前往的目标点位：{target},与当前到达的拣货点一致。")
+        elif target and target not in view_ls:
+            logger.warning(f"注意检查一下，移动中指示的目标点{target}与当前拣货页面的不一致。")
         logger.info(f"SpeedPicker处于拣货流程,页面信息:{view_ls}")  # 需要记录一下进入拣货流程.
         if '输入' in view_ls:  # 1.还没扫码，有输入按钮。
             logger.info("拣货情形1,还未扫码.")
@@ -494,6 +500,7 @@ class SpeedPicker:
     def main(self):
         """主业务流程，通过不断的抓取页面信息。去确定当前SpeedPicker运行状态"""
         self.open_sp()
+        target_location = ''
         while True:
             # self.press_ok()  # 应对随时弹出来的需要协助，提示框。有必要保留,可能点掉绑定载具的"完成"
             try:
@@ -502,8 +509,9 @@ class SpeedPicker:
                 ls = ''.join(view_ls)  # 这个是长文本。用来做一些特殊判断。
             except:
                 continue
-            use_text = {'等待任务中', '前往', '拣货异常', '拣货中', '异常上报', '输入', '暂停', '恢复', '拣货执行结果', '隔口名称', '任务被终止', '请取下载物箱或货品',
-                        '已取下'}
+            use_text = {'等待任务中', '紧急拣货中', '前往', '拣货异常', '拣货中', '异常上报', '输入', '暂停', '恢复', '拣货执行结果', '隔口名称', '任务被终止',
+                        '请取下载物箱或货品',
+                        '已取下', 'UPC:'}
             set_view = set(view_ls)
             if self.random_trigger(n=60):
                 logger.debug(f"主流程调试日志：{view_ls}")  # 调试打印的，后面不用了
@@ -519,15 +527,18 @@ class SpeedPicker:
                 self.wait_moment("等待任务中")
             elif '前往' in view_ls:
                 locate = view_ls[view_ls.index('前往') + 1]  # 前往的后一个，就是目标地点。
+                target_location = locate
                 logger.info(f"机器人正在前往:{locate},请等待。")
+                if locate.startswith('A0'):
+                    logger.debug(f"前往目标的拣货点信息：{self.get_text()}")
                 if self.random_trigger(n=300000):  # 触发随机。
                     self.pause_move()  # 暂停移动。
                 self.wait_moment("前往")
             elif any_one(['扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
                 self.bind_carrier()
-            elif view_ls[0] == '拣货中' and len(set_view.difference(use_text)) >= 4:  # {'拣货中', '完成', '异常上报', '输入', '×'}
+            elif len(set_view.difference(use_text)) >= 4:  # {'拣货中', '完成', '异常上报', '输入', 'UPC:'}
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
-                self.picking()  # 封装成函数，单独处理。
+                self.picking(target=target_location)  # 封装成函数，单独处理。
             elif '拣货执行结果' in ls[:10]:
                 logger.debug(f"拣货结果:{self.get_text()}")
                 self.press_ok()
@@ -536,7 +547,7 @@ class SpeedPicker:
                 logger.info("完成一单,不错!")
                 logger.info('~*' * 25 + '\n')
                 self.wait_moment('已取下')
-            elif '已取下' in ls and '打包' in ls:
+            elif '已取下' in view_ls:
                 # logger.debug(f"波次信息:{self.get_text()[-2]}")
                 self.press_ok()  # 确定波次.
                 # 异常处理区,或者订单异常终止,都是这个流程,无需重复点.
