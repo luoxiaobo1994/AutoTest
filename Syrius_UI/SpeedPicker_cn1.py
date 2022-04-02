@@ -357,7 +357,7 @@ class SpeedPicker:
                 count -= 1
 
     def picking(self, target=''):
-        if not target.startswith('A0'):
+        if not target.startswith('A0') and target != '':  # 在拣货点开脚本，目标点是空的。
             return  # 前往的目标点，不是货架区。说明不是拣货流程，直接跳出去。
         self.press_ok()
         view_ls = self.get_text()
@@ -536,10 +536,10 @@ class SpeedPicker:
                 self.wait_moment("前往")
             elif any_one(['扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
                 self.bind_carrier()
-            elif len(set_view.difference(use_text)) >= 4:  # {'拣货中', '完成', '异常上报', '输入', 'UPC:'}
+            elif len(set_view.difference(use_text)) >= 3:  # {'拣货中', '完成', '异常上报', '输入', 'UPC:'}
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
                 self.picking(target=target_location)  # 封装成函数，单独处理。
-            elif '拣货执行结果' in ls[:10]:
+            elif ainb(['格口名称', '单据', '确定'], view_ls):
                 logger.debug(f"拣货结果:{self.get_text()}")
                 self.press_ok()
                 # 异常处理区,或者订单异常终止,都是这个流程,无需重复点.
