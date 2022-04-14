@@ -375,7 +375,7 @@ class SpeedPicker:
             # total = view_ls[-4]  # 单独的最大拣货数量。  从输入开始走,可以这么拿.
             if self.random_trigger(n=50):  # 随机触发,先去掉，100%触发。
                 self.input_error(random.randint(1, 564313112131))  # 随机取一个,取对了,就可以买彩票了。
-            good_code = view_ls[view_ls.index('UPC:') + 1]
+            good_code = view_ls[view_ls.index('编码:') + 1]
             self.inputcode(code=good_code)  # 输入了商品码。
             self.driver.click_element((By.XPATH, '//*[@text="完成"]'))
             logger.debug(f"通过点击[完成],快速完成拣货.")
@@ -511,7 +511,7 @@ class SpeedPicker:
                 continue
             use_text = {'等待任务中', '紧急拣货中', '前往', '拣货异常', '拣货中', '异常上报', '输入', '暂停', '恢复', '拣货执行结果', '隔口名称', '任务被终止',
                         '请取下载物箱或货品',
-                        '已取下', 'UPC:'}
+                        '已取下', '编码:'}
             set_view = set(view_ls)
             if self.random_trigger(n=60):
                 logger.debug(f"主流程调试日志：{view_ls}")  # 调试打印的，后面不用了
@@ -536,10 +536,10 @@ class SpeedPicker:
                 self.wait_moment("前往")
             elif any_one(['扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
                 self.bind_carrier()
-            elif len(set_view.difference(use_text)) >= 3:  # {'拣货中', '完成', '异常上报', '输入', 'UPC:'}
+            elif len(set_view.difference(use_text)) >= 3 and '编码:' in view_ls:  # {'拣货中', '完成', '异常上报', '输入', '编码:'}
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
                 self.picking(target=target_location)  # 封装成函数，单独处理。
-            elif ainb(['格口名称', '单据', '确定'], view_ls):
+            elif ainb(['格口名称', '单据'], view_ls):
                 logger.debug(f"拣货结果:{self.get_text()}")
                 self.press_ok()
                 # 异常处理区,或者订单异常终止,都是这个流程,无需重复点.
@@ -560,14 +560,14 @@ class SpeedPicker:
                 self.click_view_text("完成")
             elif '拣货异常' in ls:  # 异常处理区.
                 logger.info("当前任务上报了异常,异常信息如下:")
-                err_info = self.get_text()  # 可以根据'UPC:'去拿到有几个异常商品.
+                err_info = self.get_text()  # 可以根据'编码:'去拿到有几个异常商品.
                 err_goods_ls = []
                 for item in err_info:  # 先拿到有几个异常订单.
-                    if item.startswith('UPC:'):
+                    if item.startswith('编码:'):
                         err_goods_ls.append(item)
                 for goods in err_goods_ls:
                     logger.info(
-                        f"商品码:{goods.split('UPC:')[-1]},"
+                        f"商品码:{goods.split('编码:')[-1]},"
                         f"名称:{err_info[err_info.index(goods) - 1]},"
                         f"商品储位:{err_info[err_info.index(goods) - 3]},"
                         f"{err_info[err_info.index(goods) - 4]},"  # 订单

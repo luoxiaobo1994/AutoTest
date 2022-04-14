@@ -257,4 +257,6 @@ class just_err(Exception):
 
 
 if __name__ == '__main__':
-    print(alpha_digit(20))
+    ls = ['a','c']
+    ls2 = ['b','c','d','a']
+    print(ainb(ls,ls2))

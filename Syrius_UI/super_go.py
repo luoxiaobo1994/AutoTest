@@ -54,9 +54,10 @@ def status():
         "payload": ""
     }"""
     bus = dbus.SystemBus()
-    nav = bus.get_object("syrius.robot.navigation", "/syrius/robot/navigation")  #
+    nav = bus.get_object("syrius.robot.navigation", "/syrius/robot/navigation")
     try:
-        reply = nav.request(status_check, dbus_interface="syrius.robot.navigation")  # get position status, return json
+        # get position status, return json
+        reply = nav.request(status_check, dbus_interface="syrius.robot.navigation")
         # print(reply)
         x = json.loads(reply)
         reply = x["status"]  # 返回两个状态：'OK','failed'
