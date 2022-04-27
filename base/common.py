@@ -9,6 +9,8 @@ import sys, os, wcwidth
 import threading
 from utils.log import logger
 from multiprocessing.dummy import Pool
+from collections.abc import Iterable
+
 
 """
 封装一些基础方法,公共使用.
@@ -250,6 +252,21 @@ def alpha_digit(num=10):
     return ''.join(random.sample(ls, random.choice(range(1, num))))
 
 
+def deep_flatten(ls):
+    temp = []  # 临时存储
+
+    def f(ls):  # 内嵌函数
+        if isinstance(ls, Iterable):  # 判断是否是可迭代对象
+            for i in ls:  # 循环抓迭代器里的元素
+                for a in f(i):  # 调用自身.
+                    temp.append(a)  # 是迭代器里,拆出来,加整到临时列表里.
+            return []  # 外层for循环执行完,返回的空列表,不会影响临时列表的值.
+        else:
+            return [ls]  # 不是迭代器,说明已经无法再展开了.
+    f(ls)
+    return temp
+
+
 class just_err(Exception):
 
     def __init__(self):
@@ -257,6 +274,14 @@ class just_err(Exception):
 
 
 if __name__ == '__main__':
-    ls = ['a','c']
-    ls2 = ['b','c','d','a']
-    print(ainb(ls,ls2))
+    ls = [1, [2, [3]], [[4], [[5, [6, 7, [8, 9]]]]], 10]
+    print(deep_flatten(ls))
+
+    def xx():
+        for i in range(10):
+            if i % 5 == 0:
+                print(1)
+        return 'xxx'
+
+
+    print(xx())

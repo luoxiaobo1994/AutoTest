@@ -16,7 +16,7 @@ class Logger(object):
         self.backup_count = 30  # 备份的最大数量,多保存几份.
         # 日志输出级别
         self.console_output_level = "DEBUG"  # 控制台输出所有信息,实际调试的时候,脚本有控制,这里不一定生效.
-        self.file_output_level = "INFO"  # 日志文件仅输出信息.尽量保存得详细些
+        self.file_output_level = "DEBUG"  # 日志文件仅输出信息.尽量保存得详细些
         # 日志输出格式,可以修改一下日期格式,避免出现三位数的毫秒.
         self.formatter = logging.Formatter("%(name)s %(asctime)s [%(levelname)s] : %(message)s",
                                            datefmt='%Y-%m-%d %H:%M:%S')

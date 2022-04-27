@@ -7,7 +7,6 @@ selenium的二次封装,优化第一版
 """
 import os
 from time import sleep
-
 from appium.webdriver.common.touch_action import TouchAction
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -16,7 +15,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC, select
 from selenium.webdriver.support.wait import WebDriverWait as wdw
-
 from base.common import *
 from utils.log import logger
 
@@ -24,7 +22,7 @@ from utils.log import logger
 class TestKey:
 
     # 初始化关键字驱动类
-    def __init__(self, driver):  # 传入一个浏览器驱动,至于是网页的还是APP都OK 不能一个动作生成一个浏览器
+    def __init__(self, driver=webdriver.Chrome()):  # 传入一个浏览器驱动,至于是网页的还是APP都OK 不能一个动作生成一个浏览器
         logger.debug("启动脚本...")
         time.sleep(1)  # 有时候莫名其妙的卡一下,给个等待吧.
         self.driver = driver
