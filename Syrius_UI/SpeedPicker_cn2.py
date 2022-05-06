@@ -166,6 +166,11 @@ class SpeedPicker:
             except:
                 count -= 1
             try:
+                self.driver.click_element((By.XPATH, '//*[@text="重试"]'), wait=timeout)
+                break
+            except:
+                count -= 1
+            try:
                 self.driver.click_element((By.XPATH, '//*[@text="完成"]'), wait=timeout)
                 break
             except:
@@ -439,13 +444,14 @@ class SpeedPicker:
         if '输入' in self.get_text():
             self.click_view_text("输入")
         while True:
-            # self.press_ok()
-            tmp_text = ''.join(self.get_text()).replace(' ', '')
-            if '绑定载物箱' in tmp_text:
+            self.press_ok()
+            tmp_text = ''.join(self.get_text())
+            if '扫码绑定 载物箱' in tmp_text:
+                logger.debug("到了输入载物箱码流程。")
                 self.inputcode(random_string(64))  # 1-64个长度的随机字符串.
                 sleep(1)  # 绑定单个的时候,抓太快了,会重复输一下,此时页面换了,就没有输入框了.给个延时.
                 try:
-                    self.click_view_text("确定", wait=2)
+                    self.click_view_text("完成", wait=2)
                     break  # 绑定完成了  
                 except:
                     pass
@@ -534,12 +540,12 @@ class SpeedPicker:
                 if self.random_trigger(n=300000):  # 触发随机。
                     self.pause_move()  # 暂停移动。
                 self.wait_moment("前往")
-            elif any_one(['扫码绑定 载物箱', '扫码绑定载物箱'], view_ls):
+            elif any_one(['扫码绑定 载物箱', '扫码绑定载物箱', '请放置好载物箱，并归位扫码枪'], view_ls):
                 self.bind_carrier()
             elif len(set_view.difference(use_text)) >= 3 and '编码:' in view_ls:  # {'拣货中', '完成', '异常上报', '输入', '编码:'}
                 # 拿到这个，说明在拣货页面。需要根据几种情况去进行处理操作。
                 self.picking(target=target_location)  # 封装成函数，单独处理。
-            elif ainb(['格口名称', '单据'], view_ls):
+            elif ['格口名称', '单据'] in view_ls:
                 logger.debug(f"拣货结果:{self.get_text()}")
                 self.press_ok()
                 # 异常处理区,或者订单异常终止,都是这个流程,无需重复点.
