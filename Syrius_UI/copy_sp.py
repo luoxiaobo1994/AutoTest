@@ -18,7 +18,7 @@ def add_sp(num):
     # 批量复制SP文件。从2开始，因为1是默认那个。
     for n in range(2, num + 1):  # 直接整，重复了也会直接覆盖。
         shutil.copyfile(file, file.split("\\")[-1].replace('1', str(n)))
-    print("新增文件完成")
+    print(f"新增文件完成,新增{num}份脚本。")
     time.sleep(1)
 
 
