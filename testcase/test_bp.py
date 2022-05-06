@@ -12,14 +12,14 @@ from time import sleep
 
 class Test_BluePrint():
 
-    def setup_class(cls):
-        cls.driver = webdriver.Chrome()
-        cls.bp = BluePrint(cls.driver)
-        cls.bp.open_blueprint()
+    def setup_class(self):
+        self.driver = webdriver.Chrome()
+        self.bp = BluePrint(self.driver)
+        self.bp.open_blueprint()
 
-    def teardown_class(cls):
+    def teardown_class(self):
         sleep(3)
-        cls.driver.quit()
+        self.driver.quit()
 
     @pytest.mark.parametrize('user,password', [('lin82726142@163.com', '123123Qq.')])
     def test_01_login(self, user, password):
