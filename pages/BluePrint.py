@@ -47,6 +47,7 @@ class BluePrint(TestKey):
         """ 场地列表 """
         site_list = self.find_elements((By.XPATH, '//div[@class="item"]'))
         logger.debug(f"当前账户，包含了{len(site_list)}个场地。")
+        return len(site_list)
 
     def map_list(self):
         """ 地图列表 """
@@ -110,7 +111,7 @@ class BluePrint(TestKey):
         self.click_element((By.XPATH, '//button[@class="ant-btn ant-btn-primary"]'))
 
     def check_config(self):
-        self.open_url(self.url + '?showConfig=1')
+        self.open_url(self.url + '&showConfig=1')
         self.login()
         self.enter_site()
         options = self.find_elements((By.XPATH, '//div[@role="tab"]'))

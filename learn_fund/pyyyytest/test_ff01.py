@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 # Author: luoxiaobo
 # TIME: 2022/3/10 19:35
+from time import sleep
 
 import pytest
 
@@ -36,26 +37,40 @@ def use_param(request):
 class Test_ff():
 
     def setup_class(self):
+        sleep(0.5)
         print("每个类之前,只执行1次的setup_class.")
 
     def teardown_class(self):
+        sleep(0.5)
         print("每个类执行之后,才执行1次的teardown.")
 
     def setup(self):
-        print(">>>每个用例执行之前，都执行一次setup.<<<")
+        sleep(0.5)
+        print("----------每个用例执行之前，都执行一次setup.-------------")
 
     def teardown(self):
-        print("-*-每个用例执行完成后，都执行一次teardown.-*-")
+        sleep(0.5)
+        print("**********每个用例执行完成后，都执行一次teardown.********")
 
     def test_lxb(self):
-        print("测试罗小波")
+        print("测试1:罗小波")
 
-    @pytest.mark.parametrize("user,password", [('user001', 123456), ('admin', 88888888), (None, 111), ('123', None)])
-    def test_login(self, user, password):
-        print(f"user:{user},password:{password}")
+    def test_lxx(self):
+        print("测试2:罗小波")
 
-    def test_fixture01(self, exe_sql):
-        print("测试一下个性化前置.")
+    def test_lx3(self):
+        print("测试3:罗小波")
 
-    def test_fixture02(self, use_param):
-        print(f"使用了fixture的参数：{use_param}")
+    # @pytest.mark.parametrize("user,password", [('user001', 123456), ('admin', 88888888), (None, 111), ('123', None)])
+    # def test_login(self, user, password):
+    #     print(f"user:{user},password:{password}")
+    #
+    # def test_fixture01(self, exe_sql):
+    #     print("测试一下个性化前置.")
+    #
+    # def test_fixture02(self, use_param):
+    #     print(f"使用了fixture的参数：{use_param}")
+
+
+if __name__ == '__main__':
+    pytest.main()

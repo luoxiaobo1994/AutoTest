@@ -437,6 +437,7 @@ class SpeedPicker:
 
     def bind_carrier(self):
         # 绑定载物箱。
+        self.press_ok()
         logger.info(f"绑定载物箱流程,请给机器人绑定载物箱.载物箱信息:{self.get_text()}")
         if self.random_trigger(n=0):  # 上报异常，就不用做了。
             self.report_err('载具不合适')
@@ -444,7 +445,6 @@ class SpeedPicker:
         if '输入' in self.get_text():
             self.click_view_text("输入")
         while True:
-            self.press_ok()
             tmp_text = ''.join(self.get_text())
             if '扫码绑定 载物箱' in tmp_text:
                 logger.debug("到了输入载物箱码流程。")
@@ -508,7 +508,7 @@ class SpeedPicker:
         self.open_sp()
         target_location = ''
         while True:
-            # self.press_ok()  # 应对随时弹出来的需要协助，提示框。有必要保留,可能点掉绑定载具的"完成"
+            self.press_ok()  # 应对随时弹出来的需要协助，提示框。有必要保留,可能点掉绑定载具的"完成"
             try:
                 view_ls = self.get_text(wait=15)  # 当前页面文本信息。
                 # logger.debug(f"view_ls:{view_ls}")
@@ -590,6 +590,8 @@ class SpeedPicker:
             else:
                 self.press_ok()  # 这里来点一下
                 logger.debug(f"main主函数里,最后一个else.为什么会走到这一步? 此时的界面文本:{self.get_text()}")
+                # logger.debug("既然到这了,检查一下机器人的电量吧.")
+                self.robot_battery()
 
 
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ def add_sp(num):
     # 批量复制SP文件。从2开始，因为1是默认那个。
     for n in range(2, num + 1):  # 直接整，重复了也会直接覆盖。
         shutil.copyfile(file, file.split("\\")[-1].replace('1', str(n)))
-    print(f"新增文件完成,新增{num}份脚本。")
+    print(f"新增文件完成,新增{num - 1}份脚本。")
     time.sleep(1)
 
 
@@ -36,5 +36,3 @@ def del_sp(num=30):
 # del_sp()  # 删除speedpicker.py
 # time.sleep(2)
 add_sp(devices)  # 复制speedpicker.py
-
-

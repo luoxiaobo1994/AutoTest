@@ -109,8 +109,7 @@ class TestKey:
     # 定位并点击元素
     def click_element(self, locator, wait=1, i=False, raise_except=False):
         try:
-            element = self.find_element(locator, wait=wait)
-            element.click()
+            self.find_element(locator, wait=wait).click()
             if i:
                 logger.info(f"点击元素:{locator} 成功.")
         except:
@@ -215,14 +214,13 @@ class TestKey:
         try:
             element.clear()  # 先进行清空.避免干扰影响
         except:
-            pass
+            logger.warning(f"元素输入文本:[{text}]失败.")
         finally:
             element.send_keys(text)
 
     # 获取元素对象的文本
     def get_element_text(self, locator, wait=2):
-        element = self.find_element(locator, wait)
-        return element.text
+        return self.find_element(locator, wait).text
 
     # 鼠标悬停
     def move_to_element(self, locator, wait=5):

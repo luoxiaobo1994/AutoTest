@@ -33,8 +33,17 @@ class Test_BluePrint():
         self.bp.login(user, password)
         assert self.bp.element_display((By.XPATH, "//div[@*='ant-form-explain']"))
 
+    def test_03_site(self):
+        """ 场地检查 """
+        self.bp.login()
+        site_num = self.bp.site_list()
+        assert site_num >= 2
+
+    def test_04_select(self):
+        pass
+
 
 if __name__ == '__main__':
     pytest.main()
-    os.system(r"allure generate D:\AutomationLogreport -o D:\AutomationLogreport\report.html --clean")
-    # print(1)
+    os.system(r"allure generate D:\AutomationLogreport -o ../report --clean")
+    print(1)
