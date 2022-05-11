@@ -15,8 +15,12 @@ def more():
     global count
     res = requests.get(url,params=task_uuid)   # 这里要用params传,不能用json.
     info = dict(json.loads(res.text))  # 文本转json再转字典.
-    # print(info)
-    print_dict(info)
+    print(f"url:{res.url}",
+          f"cookie:{res.cookies}",
+          f"reason:{res.reason}",
+          f"text:{res.text}",
+          f"status_code:{res.status_code}",sep='\n')
+    # print_dict(info)
     # if res.status_code == 200:
     #     count += 1
     #     print('\r%d'%count)

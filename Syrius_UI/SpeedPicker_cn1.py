@@ -45,7 +45,7 @@ class SpeedPicker:
         for i in tmp_text:
             if i.endswith('%') and i.split('%')[0].isdigit():
                 logger.info(f"当前机器人电量为:{i}")
-        else:
+                return
             logger.warning('获取机器人电池失败.')
 
     def open_sp(self):
@@ -156,7 +156,8 @@ class SpeedPicker:
                 logger.info("恢复按钮消失了,可能是人为点击了.")
                 return
 
-    def press_ok(self, num=2, timeout=0.1):
+    def press_ok(self, num=3, timeout=0.2):
+        # logger.debug("点击确定流程.")
         # 点击确定按钮
         count = num
         while count > 0:
@@ -165,11 +166,11 @@ class SpeedPicker:
                 break
             except:
                 count -= 1
-            try:
-                self.driver.click_element((By.XPATH, '//*[@text="重试"]'), wait=timeout)
-                break
-            except:
-                count -= 1
+            # try:
+            #     self.driver.click_element((By.XPATH, '//*[@text="重试"]'), wait=timeout)  # 这个不可点击.
+            #     break
+            # except:
+            #     count -= 1
             try:
                 self.driver.click_element((By.XPATH, '//*[@text="完成"]'), wait=timeout)
                 break
@@ -444,6 +445,8 @@ class SpeedPicker:
             return  # 确保流程跳出去。
         if '输入' in self.get_text():
             self.click_view_text("输入")
+        if '重试' in self.get_text():
+            self.driver.tap((By.XPATH, '//*[@text="重试"]'))  # 通过元素的坐标进行点击.
         while True:
             tmp_text = ''.join(self.get_text())
             if '扫码绑定 载物箱' in tmp_text:
@@ -515,9 +518,8 @@ class SpeedPicker:
                 ls = ''.join(view_ls)  # 这个是长文本。用来做一些特殊判断。
             except:
                 continue
-            use_text = {'等待任务中', '紧急拣货中', '前往', '拣货异常', '拣货中', '异常上报', '输入', '暂停', '恢复', '拣货执行结果', '隔口名称', '任务被终止',
-                        '请取下载物箱或货品',
-                        '已取下', '编码:'}
+            use_text = {'等待任务中', '紧急拣货中', '前往', '拣货异常', '拣货中', '异常上报', '输入', '暂停', '恢复',
+                        '拣货执行结果', '隔口名称', '任务被终止', '请取下载物箱或货品', '已取下', '编码:'}
             set_view = set(view_ls)
             if self.random_trigger(n=60):
                 logger.debug(f"主流程调试日志：{view_ls}")  # 调试打印的，后面不用了
@@ -561,7 +563,6 @@ class SpeedPicker:
                 logger.info("完成一单,不错!")
                 logger.info('~*' * 25 + '\n')
                 self.wait_moment('已取下')
-                # self.bind_fish()
             elif '安装载具' in view_ls:
                 self.click_view_text("完成")
             elif '拣货异常' in ls:  # 异常处理区.
@@ -590,7 +591,6 @@ class SpeedPicker:
             else:
                 self.press_ok()  # 这里来点一下
                 logger.debug(f"main主函数里,最后一个else.为什么会走到这一步? 此时的界面文本:{self.get_text()}")
-                # logger.debug("既然到这了,检查一下机器人的电量吧.")
                 self.robot_battery()
 
 

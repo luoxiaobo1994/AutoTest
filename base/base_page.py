@@ -5,7 +5,6 @@
 """
 selenium的二次封装,优化第一版
 """
-import os
 from time import sleep
 from appium.webdriver.common.touch_action import TouchAction
 from selenium import webdriver
@@ -280,10 +279,13 @@ class TestKey:
         elements = self.find_elements(locator, wait)
         print(f"共定位到:{len(elements)}个元素.文本信息如下:")
         info = []
-        print("info:", info)
+        # print("info:", info)
         for index, item in enumerate(elements):
-            print(f"{index}.  {item.text}")
-            info.append(item.text)
+            try:
+                print(f"{index}.  {item.text}")
+                info.append(item.text)
+            except:
+                pass
         return info  # 为什么返回是空的?  使用正常脚本,又是正常的
 
     def drag_slider(self, locator, wait=5, distance=200):
@@ -361,11 +363,23 @@ class TestKey:
         wm = self.wm_size()
         self.driver.swipe(wm['width'] * 0.8, wm['height'] * 0.5, wm['width'] * 0.2, wm['height'] * 0.5, duration)
         logger.debug("向右滑动成功.")
+
+
+    def swipto(self,dirct='up',duration=500):
+        if dirct == 'up':
+            x0,x1,y0,y1=0.5,0.5,0.8,0.2
+        wm = self.wm_size()
+        self.driver.swipe(wm['width'] * 0.8, wm['height'] * 0.5, wm['width'] * 0.2, wm['height'] * 0.5, duration)
         sleep(0.5)  # 滑动完,APP自动化性能太差.
 
-    def tap(self, x, y):
-        self.driver.tap([(x, y)])  # tap([(415,1400)]),原生方法需要这么传.
-        logger.debug(f"点击屏幕坐标位置: {(x, y)} 成功.如果没有后续操作,请检查是否位置坐标变化了.")
+    def tap(self, locator=None):
+        size = self.find_element(locator).size
+        width = size['width']
+        height = size['height']
+        loc = self.element_loc(locator)
+        logger.debug(f"元素组件的尺寸是:{size},元素的坐标是:{loc}")
+        self.driver.tap([(loc['x'] + width / 2, loc['y'] + height / 2)])  # tap([(415,1400)]),原生方法需要这么传.
+        logger.debug(f"点击屏幕坐标位置: {(loc['x'], loc['y'])} 成功.如果没有后续操作,请检查是否位置坐标变化了.")
         sleep(0.5)  # 点完做一下等待,APP自动化性能太差.
 
     # 获取元素对象的文本
@@ -425,7 +439,7 @@ class TestKey:
         TouchAction(self.driver).long_press(el=element, x=x, y=y, duration=duration).perform()
 
     def element_loc(self, locator, wait=5):
-        # 元素坐标
+        # 元素坐标 返回的是字典:x,y:{'x': 200, 'y': 1278}
         return self.find_element(locator, wait=wait).location
 
     def switch_context(self, num=-1):  # 默认跳转最新的那个界面.
