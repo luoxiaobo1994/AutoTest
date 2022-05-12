@@ -5,9 +5,9 @@
 import time,random
 
 
-def xx():
-    while 1:
-        print(1)
-        assert 1
 
-xx()
+def ss(s):
+    return s[::-1]
+
+
+print(ss(['a', 'b', 'c']))
