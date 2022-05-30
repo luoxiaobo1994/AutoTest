@@ -1,0 +1,884 @@
+# header_light参数说明
+# [id_mask, repeat, type, color, duration] ...
+# id_mask 区分多个头灯，目前只有1个，填1即可
+# repeat 重复次数
+# type 0 常亮 1 流水 2 呼吸 3 灭灯 4 逆流水
+# color 采用RGB888格式
+# duration 单位ms
+
+# motion_light
+# [id_mask, repeat, type, color, duration] ...
+# type 0 常亮 1 左流水 2 右流水 3 呼吸 4 灭灯 5 逆流水 6 流水
+
+# beeper参数说明
+# [id_mask, repeat, frequency, volume, duration] ...
+# id_mask区分多个beeper，目前只有1个，填1即可
+
+# speaker参数说明
+# repeat 重复次数
+# audio_path 音频在本地的地址
+
+# add P3 here
+
+# add P2 here
+
+# add P1 here
+
+# basic status
+init_failed:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+wait_for_location:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF5F00, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+position_lost:
+  priority: 2
+  duration_time_ms: 5000
+  header_light: [1, 1, 0, 0xFF5F00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+locate_success:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+deep_sleep:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 2, 0x0000FF, 4000]
+  motion_light: [1, 1, 4, 0xFF0000, 1000]
+wake_up:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+emergency_pop:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 3, 0x000000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+emergency_push:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_e_stop.mp3"
+    repeat: 1
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+shutdown:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF5F00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 5, 0xFF0000, 1000]
+updating:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/updating.mp3"
+    repeat: 0xFF
+peripheral_push_pull:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 3, 0x000000, 1000]
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/peripheral_plug.mp3"
+    repeat: 1
+  motion_light: [1, 1, 4, 0x000000, 1000]
+emergency_task:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+normal_working:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+
+#sensor or core hardware exception
+tx2_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper: [1, 1, 1000, 1000, 500, 1000, 0, 250, 1000, 1000, 250, 1000, 0, 1000]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+lidar_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+camera_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+sonar_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+tof_camera_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+imu_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+atmospheric_pressure_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+odometry_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+infrared_camera_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+light_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+speaker_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+beeper_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper:
+    [
+      1,
+      1,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      500,
+      1000,
+      0,
+      250,
+      1000,
+      1000,
+      250,
+      1000,
+      0,
+      1000,
+    ]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+
+#battery
+low_power:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF5F00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0xFF0000, 1000]
+lower_power:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 3, 0x00000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+battery_loop_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 3, 0x00000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+battery_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  beeper: [1, 1, 1000, 1000, 500, 1000, 0, 250, 1000, 1000, 500, 1000, 0, 1000]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+
+#navigation
+walk_accross:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+  motion_light: [1, 1, 6, 0xFF0000, 1000]
+navigation_block:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_traffic_jam.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF5F00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+navigation_brake:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+low_power_go_back_waiting_point:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF5F00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+navigation_turn_left:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+  motion_light: [1, 1, 1, 0xFF0000, 1000]
+navigation_turn_right:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+  motion_light: [1, 1, 2, 0xFF0000, 1000]
+navigation_moving:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/navigation_moving.mp3"
+    repeat: 0xFF
+
+# charge
+charging:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x0000FF, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0xFF0000, 1000]
+charge_error:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+CANCEL_ALL_EFFECT:
+  priority: 3
+  duration_time_ms: 0
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+  beeper: [1, 1, 1000, 0, 1000]
+  speaker:
+    audio_path: ""
+    repeat: 0
+
+# gogoready
+gogoready_start:
+  priority: 2
+  duration_time_ms: 4000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_start.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500, 0, 0xFF5F00, 500, 3, 0x000000, 500 , 0, 0x0000FF, 500, 3, 0x000000, 500 , 0, 0x00FF00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+gogoready_stop:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_stop.mp3"
+    repeat: 1
+  header_light: [1, 1, 2, 0x0000FF, 4000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+gogoready_notify_1:
+  priority: 2
+  duration_time_ms: 10000
+#  speaker: "file:///usr/share/sounds/syrius/gogoready_notify_1.mp3"
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 0, 0xFF0000, 500, 4, 0x000000, 500]
+gogoready_notify_2:
+  priority: 2
+  duration_time_ms: 1000
+#  speaker: "file:///usr/share/sounds/syrius/gogoready_notify_2.mp3"
+  header_light: [1, 1, 0, 0xFF5F00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+gogoready_notify_3:
+  priority: 2
+  duration_time_ms: 1000
+#  speaker: "file:///usr/share/sounds/syrius/gogoready_notify_3.mp3"
+  header_light: [1, 1, 0, 0x00000FF, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+gogoready_tap:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_tap.mp3"
+    repeat: 1
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+gogoready_e_stop:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_e_stop.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 0, 0xFF0000, 500, 4, 0x000000, 500]
+gogoready_traffic_jam:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_traffic_jam.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF5F00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+gogoready_waitting:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_waitting.mp3"
+    repeat: 1
+  header_light: [1, 1, 2, 0x0000FF, 4000]
+gogoready_start_error:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/gogoready_start_error.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+
+# speed picker
+sp_start:
+  priority: 2
+  duration_time_ms: 1000
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+sp_start_error:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/sp_start_error.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+sp_scanner_wrong:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/sp_scanner_wrong.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+sp_scanner_correct:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/sp_scanner_correct.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0x00FF00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+sp_task_complete:
+  priority: 2
+  duration_time_ms: 2000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/sp_task_complete.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+sp_bind_success:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/sp_bind_success.mp3"
+    repeat: 1
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+sp_bind_failed:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/sp_bind_failed.mp3"
+    repeat: 1
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+sp_timeout:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/sp_timeout.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+sp_picking_notify:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/sp_picking_notify.mp3"
+    repeat: 1
+  header_light: [1, 1, 2, 0x0000FF, 4000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+
+# skillspace
+skill_space_start:
+  priority: 2
+  duration_time_ms: 1000
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+skill_space_download_complete:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/skill_space_download_complete.mp3"
+    repeat: 1
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+
+# meadowmapper
+meadow_mapper_start:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/meadow_mapper_start.mp3"
+    repeat: 1
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+meadow_mapper_start_failed:
+  priority: 2
+  duration_time_ms: 10000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/meadow_mapper_start_failed.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+meadow_mapper_file_download_complete:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/meadow_mapper_file_download_complete.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0x00FF00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+meadow_mapper_file_upload_complete:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/meadow_mapper_file_upload_complete.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0x00FF00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+meadow_mapper_scan_success:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/meadow_mapper_scan_success.mp3"
+    repeat: 1
+  header_light: [1, 1, 3, 0x000000, 1000]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+meadow_mapper_failed:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/meadow_mapper_failed.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+meadow_mapper_build_map_success:
+  priority: 2
+  duration_time_ms: 1000
+  speaker:
+    audio_path: "file:///usr/share/sounds/syrius/meadow_mapper_build_map_success.mp3"
+    repeat: 1
+  header_light: [1, 1, 0, 0x00FF00, 500, 3, 0x000000, 500]
+  motion_light: [1, 1, 4, 0x000000, 1000]
+#setting and selfcheck, next time!!!
+
+# special event, not show on android !!!
+HEADER_LIGHT_RED_FLASH:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 500, 3, 0x000000, 500]
+HEADER_LIGHT_GREEN_FLASH:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 500, 3, 0x000000, 500]
+HEADER_LIGHT_BLUE_FLASH:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x0000FF, 500, 3, 0x000000, 500]
+HEADER_LIGHT_YELLOW_FLASH:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF5F00, 500, 3, 0x000000, 500]
+HEADER_LIGHT_RED_ON:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF0000, 1000]
+HEADER_LIGHT_GREEN_ON:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x00FF00, 1000]
+HEADER_LIGHT_BLUE_ON:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0x0000FF, 1000]
+HEADER_LIGHT_YELLOW_ON:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 0, 0xFF5F00, 1000]
+HEADER_LIGHT_RED_BREATH:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 2, 0xFF0000, 4000]
+HEADER_LIGHT_GREEN_BREATH:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 2, 0x00FF00, 4000]
+HEADER_LIGHT_BLUE_BREATH:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 2, 0x0000FF, 4000]
+HEADER_LIGHT_YELLOW_BREATH:
+  priority: 2
+  duration_time_ms: 10000
+  header_light: [1, 1, 2, 0xFF5F00, 4000]
+MOTION_LIGHT_RED_ON:
+  priority: 2
+  duration_time_ms: 5000
+  motion_light: [1, 1, 0, 0xFF0000, 1000]
+MOTION_LIGHT_GREEN_ON:
+  priority: 2
+  duration_time_ms: 5000
+  motion_light: [1, 1, 0, 0x00FF00, 1000]
+MOTION_LIGHT_BLUE_ON:
+  priority: 2
+  duration_time_ms: 5000
+  motion_light: [1, 1, 0, 0x0000FF, 1000]
+MOTION_LIGHT_YELLOW_ON:
+  priority: 2
+  duration_time_ms: 5000
+  motion_light: [1, 1, 0, 0xFF5F00, 1000]
+MOTION_LIGHT_RED_FLASH:
+  priority: 2
+  duration_time_ms: 5000
+  motion_light: [1, 1, 0, 0xFF0000, 500, 0, 0x000000, 500]
+MOTION_LIGHT_GREEN_FLASH:
+  priority: 2
+  duration_time_ms: 5000
+  motion_light: [1, 1, 0, 0x00FF00, 500, 0, 0x000000, 500]
+MOTION_LIGHT_BLUE_FLASH:
+  priority: 2
+  duration_time_ms: 5000
+  motion_light: [1, 1, 0, 0x0000FF, 500, 0, 0x000000, 500]
+MOTION_LIGHT_YELLOW_FLASH:
+  priority: 2
+  duration_time_ms: 5000
+  motion_light: [1, 1, 0, 0xFF5F00, 500, 0, 0x000000, 500]
