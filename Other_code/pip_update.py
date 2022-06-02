@@ -2,12 +2,9 @@
 # Author: luoxiaobo
 # TIME: 2021-07-08 14:33
 
-# from pip._internal.utils.misc import get_installed_distributions
-from subprocess import call
 import os
 
 """ 用于批量更新可更新的第三方库 """
-
 
 def pip_update():
     model_ls = os.popen('pip list -o').readlines()  # 这样才能拿到命令行的返回值.

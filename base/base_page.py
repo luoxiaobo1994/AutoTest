@@ -155,9 +155,9 @@ class TestKey:
             logger.error("下拉框选择失败.请检查输入是否正确.")
 
     # 判断元素是否可见,配合断言使用的.返回0 or 1,直接判断.
-    def element_display(self, locator, wait=2, i=False, raise_except=False):
+    def element_display(self, locator, wait=3, i=False, raise_except=False):
         try:
-            element = wdw(self.driver, wait, 0.5).until(EC.presence_of_element_located(locator))
+            wdw(self.driver, wait, 0.5).until(EC.presence_of_element_located(locator))
             if i:
                 logger.info(f"查找元素:{locator}成功,判断通过.")
             return 1
