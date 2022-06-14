@@ -14,6 +14,8 @@ import ctypes
 LEFT = 0
 RIGHT = 1
 
+interval = 0.1
+
 
 # 鼠标连点控制类
 class MouseClick:
@@ -25,6 +27,7 @@ class MouseClick:
         # 开启主监听线程
         self.listener = Listener(on_press=self.key_press)
         self.listener.start()
+        self.interval = 0.1
 
     def key_press(self, key):
         if key == Key.f8:
@@ -70,7 +73,7 @@ def new_thread_start(button, time):
 def start():
     try:
         # 将文本框读到的字符串转化为浮点数
-        time = float(input.get())
+        interval = float(input.get())
         if mouse.get() == LEFT:
             button = pynput.mouse.Button.left
         elif mouse.get() == RIGHT:
@@ -81,7 +84,7 @@ def start():
         state.insert(INSERT, "按下'ESC'键,退出监听\n")
         state.insert(INSERT, "按下'F8',开始点击")
         # 开启新线程，避免GUI卡死
-        t = threading.Thread(target=new_thread_start, args=(button, time))
+        t = threading.Thread(target=new_thread_start, args=(button, interval))
         # 开启守护线程，这样在GUI意外关闭时线程能正常退出
         t.setDaemon(True)
         t.start()
@@ -118,9 +121,10 @@ r2 = Radiobutton(root,
                  variable=mouse)
 r2.place(relx=0.2, y=40, relwidth=0.3, height=30)
 
-lab2 = Label(root, text='间隔时间', font=("微软雅黑", 11), fg="gray")
+lab2 = Label(root, text='间隔时间(秒)', font=("微软雅黑", 11), fg="gray")
 lab2.place(relx=0.55, y=10, relwidth=0.4, height=30)
-input = Entry(root, relief="flat", font=("微软雅黑", 10))
+var = StringVar(value=interval)
+input = Entry(root, relief="flat", font=("微软雅黑", 10), textvariable=var)
 input.place(relx=0.55, y=40, relwidth=0.4, height=30)
 
 label3 = Label(root,
